@@ -28,8 +28,8 @@ public class TeamController {
         this.teamService = teamService;
     }
 
-    @GetMapping("region")
-    public ResponseEntity<Boolean> isRegionSet(@ModelAttribute(name = "userId") String userId, @RequestBody BaseRequest request){
+    @PostMapping("region-get")
+    public ResponseEntity<Boolean> isRegionSet(@ModelAttribute("userId") String userId,BaseRequest request){
         try {
             requestHandler.checkRequest(request.getRequestId());
             Boolean hasTeamRegion = teamService.hasTeamRegion(userId);
@@ -45,7 +45,7 @@ public class TeamController {
 
     }
 
-    @PostMapping("region")
+    @PostMapping("region-set")
     public ResponseEntity<BaseResultDto> setTeamRegion(@ModelAttribute(name = "userId") String userId, @RequestBody SetRegionRequest request){
         try {
             requestHandler.checkRequest(request.getRequestId());
