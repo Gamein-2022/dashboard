@@ -29,7 +29,7 @@ public class User {
     @Indexed(name = "U_PASSWORD")
     private String password;
 
-    @Indexed(name = "U_LASTLOGIN")
+    @Indexed(name = "U_LAST_LOGIN")
     private Date lastLogin;
 
     public void setLastLogin(Date lastLogin) {
@@ -38,5 +38,9 @@ public class User {
 
     public Date getLastLogin() {
         return lastLogin;
+    }
+
+    public String getTeamId() {
+        return teamId;
     }
 }
