@@ -1,8 +1,8 @@
-package gamein2022.backend.dashboard.exception;
+package gamein2022.backend.dashboard.exception.login;
 
 import org.springframework.http.HttpStatus;
 
-public class TokenNotFoundException extends Exception{
+public class InvalidTokenException extends Exception{
     HttpStatus status = HttpStatus.BAD_REQUEST;
 
     public HttpStatus getStatus() {
@@ -11,6 +11,6 @@ public class TokenNotFoundException extends Exception{
 
     @Override
     public String getMessage() {
-        return "Token not found";
+        return "Invalid Token";
     }
 }
