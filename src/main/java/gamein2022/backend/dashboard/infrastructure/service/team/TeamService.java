@@ -5,6 +5,6 @@ import gamein2022.backend.dashboard.core.exception.notfound.TeamNotFoundExceptio
 import gamein2022.backend.dashboard.core.exception.notfound.UserNotFoundException;
 
 public interface TeamService {
-    Boolean hasTeamRegion(String userId) throws TeamNotFoundException, UserNotFoundException;
-    BaseResultDto setTeamRegion(int regionId,String userId) throws UserNotFoundException, TeamNotFoundException;
+    Boolean hasTeamRegion(Long userId) throws TeamNotFoundException, UserNotFoundException;
+    BaseResultDto setTeamRegion(int regionId,Long userId) throws UserNotFoundException, TeamNotFoundException;
 }

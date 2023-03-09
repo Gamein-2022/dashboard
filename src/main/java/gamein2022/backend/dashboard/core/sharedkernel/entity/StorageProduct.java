@@ -5,12 +5,10 @@ import lombok.Getter;
 import javax.persistence.*;
 
 
-@Entity
+//@Entity
 @Getter
-@Table(name = "storage_products")
-public class StorageProduct extends BaseEntity {
-    String factoryId;
-
+//@Table(name = "storage_products")
+public class StorageProduct  {
     @Column(name = "productId")
     String productId;
 

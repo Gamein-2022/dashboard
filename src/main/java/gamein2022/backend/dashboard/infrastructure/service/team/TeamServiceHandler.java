@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TeamServiceHandler implements TeamService {
@@ -27,7 +28,7 @@ public class TeamServiceHandler implements TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-    private User getUser(String userId) throws UserNotFoundException {
+    private User getUser(Long userId) throws UserNotFoundException {
         User user = userLog.getIfPresent(userId);
         if (user == null) {
             Optional<User> userOptional = userRepository.findById(userId);
@@ -44,13 +45,13 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public Boolean hasTeamRegion(String userId) throws TeamNotFoundException, UserNotFoundException {
+    public Boolean hasTeamRegion(Long userId) throws TeamNotFoundException, UserNotFoundException {
         User user = getUser(userId);
         return user.getTeam().getRegion() != 0;
     }
 
     @Override
-    public BaseResultDto setTeamRegion(int regionId, String userId) throws UserNotFoundException, TeamNotFoundException {
+    public BaseResultDto setTeamRegion(int regionId, Long userId) throws UserNotFoundException, TeamNotFoundException {
         User user = getUser(userId);
         Team team = user.getTeam();
         team.setRegion(regionId);

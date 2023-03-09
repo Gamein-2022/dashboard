@@ -8,12 +8,12 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "products")
+//@Entity
+//@Table(name = "products")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product extends BaseEntity {
+public class Product {
     @Column(name = "level")
     private int level;
 

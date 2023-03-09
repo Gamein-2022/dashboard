@@ -4,12 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"gamein2022.backend.dashboard"})
 @EnableWebMvc
 public class DashboardApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DashboardApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DashboardApplication.class, args);
+    }
 
 }

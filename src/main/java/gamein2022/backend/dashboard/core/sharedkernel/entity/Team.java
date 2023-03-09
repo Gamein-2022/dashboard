@@ -9,15 +9,20 @@ import javax.persistence.*;
 import java.util.List;
 
 
+
 @Entity
 @Table(name = "teams")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Team extends BaseEntity {
+public class Team {
 //    @OneToOne
 //    private Factory factory;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
     @OneToMany
     private List<User> users;
