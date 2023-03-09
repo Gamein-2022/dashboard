@@ -6,11 +6,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BaseResultDto {
+public class BaseResultDTO {
     protected boolean successful;
     protected String message;
 
-    public BaseResultDto(boolean successful, String message) {
+    public BaseResultDTO(boolean successful, String message) {
         this.successful = successful;
         this.message = message;
     }

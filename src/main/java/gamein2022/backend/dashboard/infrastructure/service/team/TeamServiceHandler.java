@@ -5,7 +5,7 @@ import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
-import gamein2022.backend.dashboard.web.dto.result.BaseResultDto;
+import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
 import gamein2022.backend.dashboard.core.exception.notfound.TeamNotFoundException;
 import gamein2022.backend.dashboard.core.exception.notfound.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class TeamServiceHandler implements TeamService {
@@ -51,12 +50,12 @@ public class TeamServiceHandler implements TeamService {
     }
 
     @Override
-    public BaseResultDto setTeamRegion(int regionId, Long userId) throws UserNotFoundException, TeamNotFoundException {
+    public BaseResultDTO setTeamRegion(int regionId, Long userId) throws UserNotFoundException, TeamNotFoundException {
         User user = getUser(userId);
         Team team = user.getTeam();
         team.setRegion(regionId);
         teamRepository.save(team);
-        return new BaseResultDto(true, "region set");
+        return new BaseResultDTO(true, "region set");
     }
 
 

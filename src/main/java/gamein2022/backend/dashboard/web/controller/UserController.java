@@ -1,8 +1,10 @@
 package gamein2022.backend.dashboard.web.controller;
 
 import gamein2022.backend.dashboard.infrastructure.service.user.UserService;
-import gamein2022.backend.dashboard.web.dto.request.LoginRequestDto;
-import gamein2022.backend.dashboard.web.dto.result.LoginResultDto;
+import gamein2022.backend.dashboard.web.dto.request.LoginRequestDTO;
+import gamein2022.backend.dashboard.web.dto.request.RegisterRequestDTO;
+import gamein2022.backend.dashboard.web.dto.result.LoginResultDTO;
+import gamein2022.backend.dashboard.web.dto.result.RegisterResultDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,11 +29,24 @@ public class UserController {
     @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoginResultDto> login(@RequestBody LoginRequestDto request) {
+    public ResponseEntity<LoginResultDTO> login(@RequestBody LoginRequestDTO request) {
         logger.info(request.getUsername(), " --- ", request
                 .getPassword());
         try {
-            LoginResultDto result = userService.login(request.getUsername(), request.getPassword());
+            LoginResultDTO result = userService.login(request.getUsername(), request.getPassword());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/register",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisterResultDTO> register(@RequestBody RegisterRequestDTO request) {
+        try {
+            RegisterResultDTO result = userService.register(request.getPhone(), request.getEmail(), request.getPassword());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.toString());
