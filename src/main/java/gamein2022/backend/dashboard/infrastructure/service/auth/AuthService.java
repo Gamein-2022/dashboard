@@ -13,5 +13,5 @@ public interface AuthService {
 
     RegisterAndLoginResultDTO register(String phone, String email, String password) throws BadRequestException;
 
-    AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException, MalformedJwtException;
+    AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException;
 }

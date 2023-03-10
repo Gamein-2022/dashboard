@@ -12,7 +12,6 @@ import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -60,6 +59,8 @@ public class ProfileServiceHandler implements ProfileService {
             user.setPersianName(info.getPersianName());
         }
 
+        userRepository.save(user);
+
         return new ProfileInfoResultDTO(user.getEnglishName(), user.getPersianName());
     }
 
@@ -85,6 +86,10 @@ public class ProfileServiceHandler implements ProfileService {
         team.setOwner(user);
 
         teamRepository.save(team);
+
+        user.setTeam(team);
+
+        userRepository.save(user);
 
         return new TeamInfoResultDTO(team.getName());
     }
