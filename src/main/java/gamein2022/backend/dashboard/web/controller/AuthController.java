@@ -64,16 +64,18 @@ public class AuthController {
     }
 
     @GetMapping(value = "/info",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) throws InvalidTokenException {
+    public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
             String token = request.getHeader("Authorization");
+            if (token == null || token.isEmpty()) {
+                throw new InvalidTokenException("Invalid token!");
+            }
             AuthInfo result = authService.extractAuthInfoFromToken(token);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidTokenException e) {
             logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
             return new ResponseEntity<>(error, error.getStatus());
         }
     }

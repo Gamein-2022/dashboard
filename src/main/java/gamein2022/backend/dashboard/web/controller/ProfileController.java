@@ -29,7 +29,6 @@ public class ProfileController {
     }
 
     @GetMapping(value = "/info",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> getInfo(@ModelAttribute("authInfo") AuthInfo authInfo) {
         try {
