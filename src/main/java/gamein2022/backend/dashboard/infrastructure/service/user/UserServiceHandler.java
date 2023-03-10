@@ -1,12 +1,14 @@
 package gamein2022.backend.dashboard.infrastructure.service.user;
 
+import gamein2022.backend.dashboard.core.exception.BadRequestException;
+import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
-import gamein2022.backend.dashboard.web.dto.result.LoginResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.RegisterResultDTO;
+import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.UserInfoResultDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,48 +31,69 @@ public class UserServiceHandler implements UserService {
     }
 
     @Override
-    public LoginResultDTO login(String username, String password) throws Exception {
-        Optional<User> userOptional = userRepository.findByPhone(username);
+    public RegisterAndLoginResultDTO login(String email, String phone, String password)
+            throws UserNotFoundException, BadRequestException {
+        // TODO add suitable message to exceptions so front could understand what's wrong
+        if (
+                (email == null && phone == null)
+                        || ((email != null && email.isEmpty()) && (phone != null && phone.isEmpty()))
+        ) {
+            throw new BadRequestException();
+        }
+
+        if (password == null || password.length() < 8) {
+            throw new BadRequestException();
+        }
+
+        Optional<User> userOptional = userRepository.findByEmailOrPhone(email, phone);
 
         if (userOptional.isEmpty()) {
-            throw new Exception("failed");
+            throw new UserNotFoundException();
         }
 
         User user = userOptional.get();
 
         if ((new BCryptPasswordEncoder()).matches(password, user.getPassword())) {
-//        if (user.getPassword().equals(password)) {
             String token =
                     Jwts.builder()
                             .setSubject(user.getId().toString())
                             .setIssuedAt(new Date())
                             .setExpiration(new Date((new Date()).getTime() + 86400000))
-                            .signWith(SignatureAlgorithm.HS512, DatatypeConverter.parseBase64Binary("SECRET_KEY"))
-                            .compact();
-            return new LoginResultDTO(token);
+                            .signWith(
+                                    SignatureAlgorithm.HS512,
+                                    DatatypeConverter.parseBase64Binary("SECRET_KEY")
+                            ).compact();
+            return new RegisterAndLoginResultDTO(token);
         }
-        throw new Exception("failed");
+        throw new UserNotFoundException();
     }
 
     @Override
-    public RegisterResultDTO register(String phone, String email, String password) throws Exception {
-        // TODO validate
+    public RegisterAndLoginResultDTO register(String phone, String email, String password)
+            throws BadRequestException {
+        // TODO add suitable message to exceptions so front could understand what's wrong
+        EmailValidator emailValidator = EmailValidator.getInstance(false);
+        if (!emailValidator.isValid(email)) {
+            throw new BadRequestException();
+        }
+
+        if (phone == null || phone.length() != 11) {
+            throw new BadRequestException();
+        }
+
+        if (password == null || password.length() < 8) {
+            throw new BadRequestException();
+        }
+
         User user = new User();
         user.setPhone(phone);
         user.setEmail(email);
-//        user.setPassword(password);
         user.setPassword((new BCryptPasswordEncoder()).encode(password));
 
         userRepository.save(user);
 
-        String token =
-                Jwts.builder()
-                        .setSubject(user.getId().toString())
-                        .setIssuedAt(new Date())
-                        .setExpiration(new Date((new Date()).getTime() + 86400000))
-                        .signWith(SignatureAlgorithm.HS512, DatatypeConverter.parseBase64Binary("SECRET_KEY"))
-                        .compact();
+        String token = Jwts.builder().setSubject(user.getId().toString()).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + 86400000)).signWith(SignatureAlgorithm.HS512, DatatypeConverter.parseBase64Binary("SECRET_KEY")).compact();
 
-        return new RegisterResultDTO(token);
+        return new RegisterAndLoginResultDTO(token);
     }
 }

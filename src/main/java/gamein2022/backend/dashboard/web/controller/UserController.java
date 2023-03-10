@@ -1,10 +1,8 @@
 package gamein2022.backend.dashboard.web.controller;
 
 import gamein2022.backend.dashboard.infrastructure.service.user.UserService;
-import gamein2022.backend.dashboard.web.dto.request.LoginRequestDTO;
-import gamein2022.backend.dashboard.web.dto.request.RegisterRequestDTO;
-import gamein2022.backend.dashboard.web.dto.result.LoginResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.RegisterResultDTO;
+import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
+import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,11 +27,11 @@ public class UserController {
     @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoginResultDTO> login(@RequestBody LoginRequestDTO request) {
-        logger.info(request.getUsername(), " --- ", request
+    public ResponseEntity<RegisterAndLoginResultDTO> login(@RequestBody RegisterAndLoginRequestDTO request) {
+        logger.info(request.getEmail(), " --- ", request.getPhone(), " --- ", request
                 .getPassword());
         try {
-            LoginResultDTO result = userService.login(request.getUsername(), request.getPassword());
+            RegisterAndLoginResultDTO result = userService.login(request.getEmail(), request.getPhone(), request.getPassword());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.toString());
@@ -44,9 +42,9 @@ public class UserController {
     @PostMapping(value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegisterResultDTO> register(@RequestBody RegisterRequestDTO request) {
+    public ResponseEntity<RegisterAndLoginResultDTO> register(@RequestBody RegisterAndLoginRequestDTO request) {
         try {
-            RegisterResultDTO result = userService.register(request.getPhone(), request.getEmail(), request.getPassword());
+            RegisterAndLoginResultDTO result = userService.register(request.getPhone(), request.getEmail(), request.getPassword());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.toString());
