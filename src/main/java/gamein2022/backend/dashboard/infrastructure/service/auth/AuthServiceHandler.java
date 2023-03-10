@@ -1,33 +1,28 @@
-package gamein2022.backend.dashboard.infrastructure.service.user;
+package gamein2022.backend.dashboard.infrastructure.service.auth;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
+import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
+import gamein2022.backend.dashboard.infrastructure.util.JwtUtils;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.UserInfoResultDTO;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import gamein2022.backend.dashboard.web.iao.AuthInfo;
+import io.jsonwebtoken.MalformedJwtException;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.DatatypeConverter;
-import java.util.Date;
 import java.util.Optional;
 
+
 @Service
-public class UserServiceHandler implements UserService {
+public class AuthServiceHandler implements AuthService {
 
     private final UserRepository userRepository;
 
-    public UserServiceHandler(UserRepository userRepository) {
+    public AuthServiceHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public UserInfoResultDTO getUserInfo() {
-        return null;
     }
 
     @Override
@@ -54,16 +49,7 @@ public class UserServiceHandler implements UserService {
         User user = userOptional.get();
 
         if ((new BCryptPasswordEncoder()).matches(password, user.getPassword())) {
-            String token =
-                    Jwts.builder()
-                            .setSubject(user.getId().toString())
-                            .setIssuedAt(new Date())
-                            .setExpiration(new Date((new Date()).getTime() + 86400000))
-                            .signWith(
-                                    SignatureAlgorithm.HS512,
-                                    DatatypeConverter.parseBase64Binary("SECRET_KEY")
-                            ).compact();
-            return new RegisterAndLoginResultDTO(token);
+            return new RegisterAndLoginResultDTO(JwtUtils.generateToken(user.getId()));
         }
         throw new UserNotFoundException();
     }
@@ -92,8 +78,22 @@ public class UserServiceHandler implements UserService {
 
         userRepository.save(user);
 
-        String token = Jwts.builder().setSubject(user.getId().toString()).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + 86400000)).signWith(SignatureAlgorithm.HS512, DatatypeConverter.parseBase64Binary("SECRET_KEY")).compact();
+        return new RegisterAndLoginResultDTO(JwtUtils.generateToken(user.getId()));
+    }
 
-        return new RegisterAndLoginResultDTO(token);
+    @Override
+    public AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException {
+        if (JwtUtils.isTokenExpired(token)) {
+            throw new InvalidTokenException("Invalid token!");
+        }
+        Long id = Long.parseLong(JwtUtils.getIdFromToken(token));
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new InvalidTokenException("Invalid token!");
+        }
+
+        User user = userOptional.get();
+
+        return new AuthInfo(user.getId(), user.getTeam() == null ? null : user.getTeam().getId());
     }
 }
