@@ -27,6 +27,9 @@ public class Team {
     @OneToMany
     private List<User> users;
 
+    @OneToOne
+    private User owner;
+
     @Column(name = "balance")
     private long balance;
 
