@@ -68,10 +68,10 @@ public class AuthController {
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
             String token = request.getHeader("Authorization");
-            if (token == null || token.isEmpty()) {
+            if (token == null || token.length() < 8) {
                 throw new InvalidTokenException("Invalid token!");
             }
-            AuthInfo result = authService.extractAuthInfoFromToken(token);
+            AuthInfo result = authService.extractAuthInfoFromToken(token.substring(7));
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidTokenException e) {
             logger.error(e.toString());
