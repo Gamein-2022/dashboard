@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/profile")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProfileController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ProfileService profileService;

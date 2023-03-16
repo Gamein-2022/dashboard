@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final AuthService authService;
