@@ -64,33 +64,4 @@ public class ProfileServiceHandler implements ProfileService {
         return new ProfileInfoResultDTO(user.getEnglishName(), user.getPersianName());
     }
 
-    @Override
-    public TeamInfoResultDTO createTeam(Long userId, String teamName) throws UserNotFoundException, BadRequestException {
-        if (teamName == null || teamName.isEmpty()) {
-            throw new BadRequestException();
-        }
-
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        User user = userOptional.get();
-
-        Team team = new Team();
-
-        team.setName(teamName);
-        team.setUsers(new ArrayList<>());
-        team.getUsers().add(user);
-        team.setOwner(user);
-
-        teamRepository.save(team);
-
-        user.setTeam(team);
-
-        userRepository.save(user);
-
-        return new TeamInfoResultDTO(team.getName());
-    }
 }

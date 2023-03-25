@@ -9,5 +9,4 @@ import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
 public interface ProfileService {
     ProfileInfoResultDTO getProfileInfo(Long id) throws UserNotFoundException;
     ProfileInfoResultDTO setProfileInfo(Long id, ProfileInfoRequestDTO info) throws UserNotFoundException, BadRequestException;
-    TeamInfoResultDTO createTeam (Long userId, String teamName) throws UserNotFoundException, BadRequestException;
 }

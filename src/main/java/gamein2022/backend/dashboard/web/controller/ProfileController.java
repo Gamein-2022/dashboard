@@ -60,22 +60,5 @@ public class ProfileController {
         }
     }
 
-    @PostMapping(value = "/team",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> createTeam(@ModelAttribute("authInfo") AuthInfo authInfo,
-                                                    @RequestBody TeamInfoRequestDTO request) {
-        try {
-            TeamInfoResultDTO result = profileService.createTeam(authInfo.getUserId(), request.getName());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(error, error.getStatus());
-        } catch (BadRequestException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
-        }
-    }
+
 }

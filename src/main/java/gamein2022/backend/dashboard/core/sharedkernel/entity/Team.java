@@ -17,8 +17,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Team {
-//    @OneToOne
-//    private Factory factory;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -38,4 +36,7 @@ public class Team {
 
     @Column(name = "region")
     private int region;
+
+    @OneToMany
+    private List<StorageProduct> storageProducts;
 }
