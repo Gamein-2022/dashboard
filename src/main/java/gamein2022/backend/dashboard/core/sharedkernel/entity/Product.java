@@ -45,9 +45,12 @@ public class Product {
     @OneToOne
     private ResearchSubject requires;
 
+    @Column(name = "duration")
+    private Long createDuration;
+
 
 
     public ProductDTO toDTO() {
-        return new ProductDTO(id, name, price);
+        return new ProductDTO(id, name, price, level);
     }
 }
