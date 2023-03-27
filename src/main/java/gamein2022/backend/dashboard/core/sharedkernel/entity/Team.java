@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.List;
 
 
-
 @Entity
 @Table(name = "teams")
 @NoArgsConstructor
@@ -25,13 +24,16 @@ public class Team {
     @OneToMany
     private List<User> users;
 
-    @OneToOne
+    @OneToMany
+    private List<Shipping> shippings;
+
+    @OneToOne(optional = false)
     private User owner;
 
-    @Column(name = "balance")
+    @Column(name = "balance", nullable = false)
     private long balance;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "region")
@@ -39,4 +41,10 @@ public class Team {
 
     @OneToMany
     private List<StorageProduct> storageProducts;
+
+    @OneToMany
+    private List<Building> buildings;
+
+    @OneToMany
+    private List<TeamResearch> researches;
 }

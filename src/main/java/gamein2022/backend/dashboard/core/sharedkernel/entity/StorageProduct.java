@@ -1,26 +1,53 @@
 package gamein2022.backend.dashboard.core.sharedkernel.entity;
 
+
+import gamein2022.backend.dashboard.web.dto.result.StorageProductDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 import javax.persistence.*;
 
 
 @Entity
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "storage_products")
-public class StorageProduct  {
+public class StorageProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+    private long id;
 
-    @Column(name = "productId")
-    String productId;
+    @ManyToOne(optional = false)
+    private Product product;
 
-    @Column(name = "status")
-    String status;
+    @Column(name = "in_storage_amount", nullable = false)
+    private long inStorageAmount;
 
-    @Column(name = "amount")
-    long amount;
+    @Column(name = "in_queue_amount", nullable = false)
+    private long inQueueAmount;
 
+    @Column(name = "manufacturing_amount", nullable = false)
+    private long manufacturingAmount;
+
+    @Column(name = "in_route_amount", nullable = false)
+    private long inRouteAmount;
+
+    @ManyToOne(optional = false)
+    private Team team;
+
+    public StorageProductDTO toDTO() {
+        return new StorageProductDTO(
+                product.toDTO(),
+                inStorageAmount,
+                inQueueAmount,
+                inRouteAmount,
+                manufacturingAmount
+        );
+    }
 }
