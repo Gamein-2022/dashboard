@@ -2,16 +2,13 @@ package gamein2022.backend.dashboard.infrastructure.service.profile;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
-import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.web.dto.request.ProfileInfoRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.ProfileInfoResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -19,6 +16,8 @@ import java.util.Optional;
 public class ProfileServiceHandler implements ProfileService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+
+
 
     public ProfileServiceHandler(UserRepository userRepository, TeamRepository teamRepository) {
         this.userRepository = userRepository;
@@ -63,5 +62,7 @@ public class ProfileServiceHandler implements ProfileService {
 
         return new ProfileInfoResultDTO(user.getEnglishName(), user.getPersianName());
     }
+
+
 
 }

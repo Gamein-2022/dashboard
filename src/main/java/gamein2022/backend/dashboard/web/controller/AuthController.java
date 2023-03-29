@@ -8,6 +8,7 @@ import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
+import gamein2022.backend.dashboard.web.dto.result.TimeResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,5 +80,10 @@ public class AuthController {
             ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
             return new ResponseEntity<>(error, error.getStatus());
         }
+    }
+    @GetMapping("time")
+    public ResponseEntity<BaseResultDTO> getTime(){
+        TimeResultDTO timeResultDTO = authService.getTime();
+        return new ResponseEntity<>(timeResultDTO,HttpStatus.OK);
     }
 }

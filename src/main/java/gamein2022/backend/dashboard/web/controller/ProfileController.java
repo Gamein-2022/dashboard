@@ -5,10 +5,7 @@ import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.infrastructure.service.profile.ProfileService;
 import gamein2022.backend.dashboard.web.dto.request.ProfileInfoRequestDTO;
 import gamein2022.backend.dashboard.web.dto.request.TeamInfoRequestDTO;
-import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.ProfileInfoResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
+import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +56,8 @@ public class ProfileController {
             return new ResponseEntity<>(error, error.getStatus());
         }
     }
+
+
 
 
 }
