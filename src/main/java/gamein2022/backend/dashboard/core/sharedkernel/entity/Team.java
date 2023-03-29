@@ -39,11 +39,14 @@ public class Team {
     @Column(name = "region")
     private int region;
 
-    @OneToMany
+    @OneToMany(mappedBy = "team")
     private List<StorageProduct> storageProducts;
 
     @OneToMany
     private List<Building> buildings;
+
+    @OneToMany
+    List<Product> availableProductIds;
 
     @OneToMany
     private List<TeamResearch> researches;
