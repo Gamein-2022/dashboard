@@ -2,6 +2,7 @@ package gamein2022.backend.dashboard.infrastructure.service.auth;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
+import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
@@ -34,22 +35,21 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public RegisterAndLoginResultDTO login(String email, String phone, String password)
             throws UserNotFoundException, BadRequestException {
-        // TODO add suitable message to exceptions so front could understand what's wrong
         if (
                 (email == null && phone == null)
                         || ((email != null && email.isEmpty()) && (phone != null && phone.isEmpty()))
         ) {
-            throw new BadRequestException();
+            throw new BadRequestException("اطلاعات وارد شده صحیح نمی باشد");
         }
 
         if (password == null || password.length() < 8) {
-            throw new BadRequestException();
+            throw new BadRequestException("اطلاعات وارد شده صحیح نمی باشد");
         }
 
         Optional<User> userOptional = userRepository.findByEmailOrPhone(email, phone);
 
         if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("اطلاعات وارد شده صحیح نمی باشد");
         }
 
         User user = userOptional.get();
@@ -62,19 +62,25 @@ public class AuthServiceHandler implements AuthService {
 
     @Override
     public RegisterAndLoginResultDTO register(String phone, String email, String password)
-            throws BadRequestException {
-        // TODO add suitable message to exceptions so front could understand what's wrong
+            throws BadRequestException, UserAlreadyExist {
+
         EmailValidator emailValidator = EmailValidator.getInstance(false);
         if (!emailValidator.isValid(email)) {
-            throw new BadRequestException();
+            throw new BadRequestException("اطلاعات وارد شده صحیح نمی باشد");
         }
 
         if (phone == null || phone.length() != 11) {
-            throw new BadRequestException();
+            throw new BadRequestException("اطلاعات وارد شده صحیح نمی باشد");
         }
 
         if (password == null || password.length() < 8) {
-            throw new BadRequestException();
+            throw new BadRequestException("اطلاعات وارد شده صحیح نمی باشد");
+        }
+
+        Optional<User> userOptional = userRepository.findByEmailOrPhone(email, phone);
+
+        if (userOptional.isPresent()) {
+            throw new UserAlreadyExist("کاربری با این شماره و ایمیل وجود دارد");
         }
 
         User user = new User();
@@ -90,12 +96,12 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException {
         if (JwtUtils.isTokenExpired(token)) {
-            throw new InvalidTokenException("Invalid token!");
+            throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
         }
         Long id = Long.parseLong(JwtUtils.getIdFromToken(token));
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
-            throw new InvalidTokenException("Invalid token!");
+            throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
         }
 
         User user = userOptional.get();

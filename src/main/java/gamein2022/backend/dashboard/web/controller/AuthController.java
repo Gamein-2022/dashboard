@@ -2,6 +2,7 @@ package gamein2022.backend.dashboard.web.controller;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
+import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
@@ -58,7 +59,7 @@ public class AuthController {
         try {
             RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail(), request.getPassword());
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (BadRequestException e) {
+        } catch (BadRequestException | UserAlreadyExist e) {
             logger.error(e.toString());
             ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(error, error.getStatus());
