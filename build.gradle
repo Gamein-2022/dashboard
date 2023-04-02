@@ -6,6 +6,8 @@ plugins {
 
 group = 'gamein2022.backend'
 
+apply plugin: 'org.springframework.boot'
+
 
 repositories {
 	mavenCentral()

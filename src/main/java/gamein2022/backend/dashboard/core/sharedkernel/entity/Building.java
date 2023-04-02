@@ -26,9 +26,6 @@ public class Building {
     @ManyToOne(optional = false)
     private Team team;
 
-    @Column(name = "team_id", nullable = false, insertable = false, updatable = false)
-    private long teamId;
-
     @Column(name = "type")
     private BuildingType type;
 

@@ -48,7 +48,8 @@ public class Product {
     @Column(name = "production_rate")
     private Long productionRate;
 
-
+    @Column(name = "unit_volume", nullable = false)
+    private int unitVolume;
 
     public ProductDTO toDTO() {
         return new ProductDTO(id, name, price, level,productionRate);
