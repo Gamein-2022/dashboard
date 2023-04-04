@@ -83,8 +83,7 @@ public class AuthController {
         }
     }
     @GetMapping("time")
-    public ResponseEntity<BaseResultDTO> getTime(){
-        TimeResultDTO timeResultDTO = authService.getTime();
-        return new ResponseEntity<>(timeResultDTO,HttpStatus.OK);
+    public ResponseEntity<BaseResultDTO> getTime() {
+        return new ResponseEntity<>(authService.getTime(), HttpStatus.OK);
     }
 }
