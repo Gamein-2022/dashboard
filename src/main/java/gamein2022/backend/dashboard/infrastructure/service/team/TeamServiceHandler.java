@@ -3,13 +3,17 @@ package gamein2022.backend.dashboard.infrastructure.service.team;
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
+import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.web.dto.result.RegionResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -18,14 +22,16 @@ public class TeamServiceHandler {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
 
+    private final TimeRepository timeRepository;
 
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository) {
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.timeRepository = timeRepository;
     }
 
-    public RegionResultDTO setTeamRegion(long teamId,String teamRegion) throws UserNotFoundException {
+    public RegionResultDTO setTeamRegion(long teamId, String teamRegion) throws UserNotFoundException {
         Optional<Team> teamOptional = teamRepository.findById(teamId);
         if (teamOptional.isEmpty())
             throw new UserNotFoundException();
@@ -39,15 +45,22 @@ public class TeamServiceHandler {
     }
 
     public RegionResultDTO getTeamRegion(long teamId) throws UserNotFoundException {
-         Optional<Team> teamOptional = teamRepository.findById(teamId);
-         if (teamOptional.isEmpty())
-             throw new UserNotFoundException();
-         Team team = teamOptional.get();
-         RegionResultDTO regionResultDTO = new RegionResultDTO();
-         regionResultDTO.setTeamRegionId(team.getRegion());
-         regionResultDTO.setLastRegionId(team.getRegion());
-         return regionResultDTO;
+        Optional<Team> teamOptional = teamRepository.findById(teamId);
+        if (teamOptional.isEmpty())
+            throw new UserNotFoundException();
+
+        Time time = timeRepository.findById(1L).get();
+        LocalDateTime endDate = time.getBeginTime().plusMinutes(5);
+        LocalDateTime now = LocalDateTime.now();
+        Long remainingTime = Duration.between(now, endDate).toSeconds();
+        Team team = teamOptional.get();
+        RegionResultDTO regionResultDTO = new RegionResultDTO();
+        regionResultDTO.setTeamRegionId(team.getRegion());
+        regionResultDTO.setLastRegionId(team.getRegion());
+        regionResultDTO.setRemainingTime(remainingTime);
+        return regionResultDTO;
     }
+
     public TeamInfoResultDTO createTeam(Long userId, String teamName) throws UserNotFoundException, BadRequestException {
         if (teamName == null || teamName.isEmpty()) {
             throw new BadRequestException();
