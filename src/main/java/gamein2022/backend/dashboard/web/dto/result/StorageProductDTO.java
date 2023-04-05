@@ -9,7 +9,6 @@ import lombok.Getter;
 public class StorageProductDTO {
     private ProductDTO product;
     private long inStorageAmount;
-    private long inQueueAmount;
     private long inRouteAmount;
     private long manufacturingAmount;
 }
