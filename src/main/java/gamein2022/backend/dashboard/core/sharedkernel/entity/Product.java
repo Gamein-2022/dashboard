@@ -1,5 +1,6 @@
 package gamein2022.backend.dashboard.core.sharedkernel.entity;
 
+import gamein2022.backend.dashboard.core.sharedkernel.enums.ProductGroup;
 import gamein2022.backend.dashboard.web.dto.result.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,9 +31,6 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany
-    private List<Product> components;
-
     @Column(name = "region", nullable = false)
     private int region;
 
@@ -40,16 +38,23 @@ public class Product {
     private long price;
 
     @Column(name = "available_year", nullable = false)
-    private long availableYear;
+    private int availableYear;
 
-    @OneToOne
-    private ResearchSubject requires;
+    @ManyToOne
+    private ResearchSubject RAndD;
 
     @Column(name = "production_rate")
     private Long productionRate;
 
     @Column(name = "unit_volume", nullable = false)
     private int unitVolume;
+
+    @Column(name = "demand_coefficient")
+    private double demandCoefficient;
+
+    @Column(name = "product_group")
+    @Enumerated(EnumType.STRING)
+    private ProductGroup group;
 
     public ProductDTO toDTO() {
         return new ProductDTO(id, name, price, level,productionRate);
