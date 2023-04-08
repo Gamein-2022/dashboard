@@ -15,6 +15,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
+          command_timeout: 200m
           script: |
             cd /home/ubuntu/dashboard
             git checkout master
