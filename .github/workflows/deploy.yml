@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: |
-              ls -lah
+              ls -la
               docker rm -f dashboard      
               docker-compose up --build -d
               docker-compose ps
