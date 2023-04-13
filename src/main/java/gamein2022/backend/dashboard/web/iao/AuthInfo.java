@@ -10,4 +10,6 @@ import lombok.Getter;
 public class AuthInfo implements BaseResultDTO {
     private Long userId;
     private Long teamId;
+    private String teamName;
+    private Long balance;
 }

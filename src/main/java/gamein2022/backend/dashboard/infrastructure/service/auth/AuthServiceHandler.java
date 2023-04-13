@@ -106,7 +106,11 @@ public class AuthServiceHandler implements AuthService {
 
         User user = userOptional.get();
 
-        return new AuthInfo(user.getId(), user.getTeam() == null ? null : user.getTeam().getId());
+        return new AuthInfo(
+                user.getId(),
+                user.getTeam() == null ? null : user.getTeam().getId(),
+                user.getTeam() == null ? null : user.getTeam().getName(),
+                user.getTeam() == null ? null : user.getTeam().getBalance());
     }
 
     @Override
