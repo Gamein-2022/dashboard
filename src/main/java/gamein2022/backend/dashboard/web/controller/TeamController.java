@@ -5,10 +5,7 @@ import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.infrastructure.service.team.TeamServiceHandler;
 import gamein2022.backend.dashboard.web.dto.request.SetTeamRegionRequestDTO;
 import gamein2022.backend.dashboard.web.dto.request.TeamInfoRequestDTO;
-import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.RegionResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
+import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +45,7 @@ public class TeamController {
             @RequestBody SetTeamRegionRequestDTO setTeamRegionRequestDTO
     ) {
         try {
-            RegionResultDTO regionResultDTO = teamServiceHandler.setTeamRegion(authInfo.getTeamId(),setTeamRegionRequestDTO.getRegionId());
+            RegionResultDTO regionResultDTO = teamServiceHandler.setTeamRegion(authInfo.getTeamId(), setTeamRegionRequestDTO.getRegionId());
             return new ResponseEntity<>(regionResultDTO, HttpStatus.OK);
         } catch (UserNotFoundException e) {
             logger.error(e.getMessage(), e);
@@ -73,4 +70,19 @@ public class TeamController {
             return new ResponseEntity<>(error, error.getStatus());
         }
     }
+
+    @GetMapping("logs")
+    public ResponseEntity<BaseResultDTO> getTeamLogs(
+            @ModelAttribute("authInfo") AuthInfo authInfo
+    ) {
+        try {
+            GetTeamLogsResultDTO result = teamServiceHandler.getTeamLogs(authInfo);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e){
+            logger.error(e.toString(),e);
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+    }
+
 }
