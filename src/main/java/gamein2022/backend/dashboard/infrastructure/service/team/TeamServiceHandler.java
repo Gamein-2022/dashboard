@@ -2,20 +2,25 @@ package gamein2022.backend.dashboard.infrastructure.service.team;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.Log;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
+import gamein2022.backend.dashboard.infrastructure.repository.LogRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
+import gamein2022.backend.dashboard.web.dto.result.GetTeamLogsResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.RegionResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
+import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceHandler {
@@ -24,11 +29,14 @@ public class TeamServiceHandler {
 
     private final TimeRepository timeRepository;
 
+    private final LogRepository logRepository;
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository) {
+
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
+        this.logRepository = logRepository;
     }
 
     public RegionResultDTO setTeamRegion(long teamId, String teamRegion) throws UserNotFoundException {
@@ -89,5 +97,10 @@ public class TeamServiceHandler {
         userRepository.save(user);
 
         return new TeamInfoResultDTO(team.getName());
+    }
+
+    public GetTeamLogsResultDTO getTeamLogs(AuthInfo authInfo) {
+        return new GetTeamLogsResultDTO( logRepository.findAllByTeamId(authInfo.getTeamId())
+                .stream().map(Log::toDto).collect(Collectors.toList()));
     }
 }
