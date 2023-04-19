@@ -12,7 +12,7 @@ public class TimeResultDTO implements BaseResultDTO {
     private Long day;
     private Long month;
     private Long year;
-    private Long era;
+    private Byte era;
     private Long secondOfDate;
 
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 
@@ -118,23 +119,34 @@ public class AuthServiceHandler implements AuthService {
         Time time = timeRepository.findById(1L).get();
         LocalDateTime beginDate = time.getBeginTime();
         Long stoppedSeconds = time.getStoppedTimeSeconds();
-        LocalDateTime now = LocalDateTime.now();
-        Long durationSeconds = Duration.between(beginDate, now).toSeconds() - stoppedSeconds;
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        long durationSeconds = Duration.between(beginDate, now).toSeconds() - stoppedSeconds;
 
 
-        Long daySeconds = 6L;
-        Long monthSeconds = 30L * daySeconds;
-        Long yearSeconds = 12 * monthSeconds;
 
+        long daySeconds = 8L;
+        long monthSeconds = 30L * daySeconds;
+        long yearSeconds = 12 * monthSeconds;
+        long daysFromBeginning = durationSeconds / daySeconds;
+        long monthFromBeginning = durationSeconds / monthSeconds;
+        long yearFromBeginning = durationSeconds / yearSeconds;
 
-        Long year = 1999 + (durationSeconds / yearSeconds) + 1;
-        durationSeconds -= (year - 1 - 1999) * yearSeconds;
+        byte era = 0;
+        if (daysFromBeginning >= 7425)
+            era = 4;
+        else if (daysFromBeginning >= 4688)
+            era = 3;
+        else if (daysFromBeginning >= 2738)
+            era = 2;
+        else if (daysFromBeginning >= 1163) {
+            era = 1;
+        }
 
-        Long month = durationSeconds / monthSeconds + 1;
-        durationSeconds -= (month - 1) * monthSeconds;
+        long year = 2002 + (yearFromBeginning) + 1;
 
-        Long day = durationSeconds / daySeconds + 1;
-        durationSeconds -= (day - 1) * daySeconds;
+        long month = ((8 + monthFromBeginning) % 12) + 1;
+
+        long day = ((14 + daysFromBeginning) % 30) + 1;
 
 
         TimeResultDTO timeResultDTO = new TimeResultDTO();
@@ -142,16 +154,6 @@ public class AuthServiceHandler implements AuthService {
         timeResultDTO.setDay(day);
         timeResultDTO.setMonth(month);
         timeResultDTO.setYear(year);
-        Long era = 0L;
-        if (year < 2007)
-            era = 0L;
-        else if (year < 2011)
-            era = 1L;
-        else if (year < 2016)
-            era = 2L;
-        else if (year < 2023) {
-            era = 3L;
-        }
         timeResultDTO.setEra(era);
         return timeResultDTO;
     }
