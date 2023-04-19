@@ -58,7 +58,7 @@ public class TeamServiceHandler {
             throw new UserNotFoundException();
 
         Time time = timeRepository.findById(1L).get();
-        LocalDateTime endDate = time.getBeginTime().plusMinutes(5);
+        LocalDateTime endDate = time.getBeginTime().plusSeconds(time.getChooseRegionDuration());
         LocalDateTime now = LocalDateTime.now();
         Long remainingTime = Duration.between(now, endDate).toSeconds();
         Team team = teamOptional.get();

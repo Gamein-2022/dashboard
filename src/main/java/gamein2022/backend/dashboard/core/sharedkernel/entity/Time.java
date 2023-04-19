@@ -27,5 +27,7 @@ public class Time {
     @Column(name = "stopped_time")
     private Long stoppedTimeSeconds;
 
+    @Column(name = "choose_region_duration")
+    private Long chooseRegionDuration;
 
 }
