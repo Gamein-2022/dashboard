@@ -24,8 +24,8 @@ public class ResearchSubject {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "available_year", nullable = false)
-    private int availableYear;
+    @Column(name = "available_day", nullable = false)
+    private int availableDay;
 
     @Column(name = "base_price")
     private int basePrice;
@@ -34,6 +34,6 @@ public class ResearchSubject {
     private int baseDuration;
 
     public ResearchSubjectDTO toDTO() {
-        return new ResearchSubjectDTO(name, availableYear, basePrice, baseDuration);
+        return new ResearchSubjectDTO(name, availableDay, basePrice, baseDuration);
     }
 }

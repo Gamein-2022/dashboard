@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class ResearchSubjectDTO {
     private String name;
-    private int availableYear;
+    private int availableDay;
     private int basePrice;
     private int baseDuration;
 }
