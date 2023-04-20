@@ -110,13 +110,15 @@ public class AuthServiceHandler implements AuthService {
             throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
         }
 
-        User user = userOptional.get();
 
+        User user = userOptional.get();
+        Time time = timeRepository.findById(1L).get();
         return new AuthInfo(
                 user.getId(),
                 user.getTeam() == null ? null : user.getTeam().getId(),
                 user.getTeam() == null ? null : user.getTeam().getName(),
-                user.getTeam() == null ? null : user.getTeam().getBalance());
+                user.getTeam() == null ? null : user.getTeam().getBalance(),
+                time.getIsGamePaused());
     }
 
     @Override
