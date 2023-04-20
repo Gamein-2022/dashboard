@@ -7,6 +7,7 @@ import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
+import gamein2022.backend.dashboard.web.dto.result.CheckAdminResult;
 import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
@@ -25,6 +26,10 @@ public class BackPanelController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
+    @GetMapping()
+    public ResponseEntity<BaseResultDTO> checkAdmin(){
+        return new ResponseEntity<>(new CheckAdminResult(true),HttpStatus.OK);
+    }
 
 
 }
