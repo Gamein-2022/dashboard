@@ -88,7 +88,7 @@ public class TeamServiceHandler {
         team.setUsers(new ArrayList<>());
         team.getUsers().add(user);
         team.setOwner(user);
-        team.setBalance(1000000);
+        team.setBalance(1000000000);
 
         teamRepository.save(team);
 
