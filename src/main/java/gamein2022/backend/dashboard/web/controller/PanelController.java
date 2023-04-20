@@ -40,10 +40,9 @@ public class PanelController {
         }
     }
 
-    @ExceptionHandler(value = {InvalidTokenException.class,BadRequestException.class,UnauthorizedException.class})
+    @ExceptionHandler
     public ResponseEntity<ErrorResultDTO> exception(InvalidTokenException exception){
         logger.error("Error: " + exception.getMessage());
-
         ErrorResultDTO result = new ErrorResultDTO(exception.getMessage(), HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(result, result.getStatus());
     }
