@@ -30,4 +30,10 @@ public class Time {
     @Column(name = "choose_region_duration")
     private Long chooseRegionDuration;
 
+    @Column(name = "last_stop")
+    private LocalDateTime lastStopTime;
+
+    @Column(name = "is_game_paused")
+    private Boolean isGamePaused;
+
 }
