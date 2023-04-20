@@ -41,4 +41,7 @@ public class User {
 
     @Column(name = "last_login")
     private Date lastLogin;
+
+    @Column(name = "is_admin", columnDefinition = "boolean default false")
+    private boolean isAdmin = false;
 }
