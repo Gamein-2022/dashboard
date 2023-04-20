@@ -4,6 +4,7 @@ import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
@@ -27,6 +28,8 @@ public class AuthServiceHandler implements AuthService {
 
     private final UserRepository userRepository;
     private final TimeRepository timeRepository;
+
+
 
     public AuthServiceHandler(UserRepository userRepository, TimeRepository timeRepository) {
         this.userRepository = userRepository;
@@ -60,6 +63,8 @@ public class AuthServiceHandler implements AuthService {
         }
         throw new UserNotFoundException();
     }
+
+
 
     @Override
     public RegisterAndLoginResultDTO register(String phone, String email, String password)
@@ -156,5 +161,14 @@ public class AuthServiceHandler implements AuthService {
         timeResultDTO.setYear(year);
         timeResultDTO.setEra(era);
         return timeResultDTO;
+    }
+
+    @Override
+    public User getUserById(Long userId) throws BadRequestException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException("User does not exist!");
+        }
+        return userOptional.get();
     }
 }
