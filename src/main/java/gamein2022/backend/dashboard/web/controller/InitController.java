@@ -22,21 +22,20 @@ import javax.servlet.http.HttpServletRequest;
 public class InitController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final TimeRepository timeRepository;
+
     private final AuthService authService;
 
-    public InitController(TimeRepository timeRepository, AuthService authService) {
-        this.timeRepository = timeRepository;
+    public InitController(AuthService authService) {
         this.authService = authService;
     }
 
 
     @ModelAttribute(name = "authInfo")
     public AuthInfo getLoginInformation(HttpServletRequest request) throws InvalidTokenException {
-        Time time = timeRepository.findById(1L).get();
-        if (time.getIsGamePaused()){
-            throw new InvalidTokenException("بازی متوقف است .");
-        }
+//        Time time = timeRepository.findById(1L).get();
+//        if (time.getIsGamePaused()){
+//            throw new InvalidTokenException("بازی متوقف است .");
+//        }
         String token = request.getHeader("Authorization");
         if (token == null || token.length() < 8) {
             throw new InvalidTokenException("Invalid token!");

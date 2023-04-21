@@ -4,12 +4,13 @@ import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
+import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.TimeResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final TimeRepository timeRepository;
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(TimeRepository timeRepository, AuthService authService) {
+        this.timeRepository = timeRepository;
         this.authService = authService;
     }
 
@@ -70,6 +73,10 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
+            Time time = timeRepository.findById(1L).get();
+            if (time.getIsGamePaused()){
+                throw new InvalidTokenException("بازی متوقف است .");
+            }
             String token = request.getHeader("Authorization");
             if (token == null || token.length() < 8) {
                 throw new InvalidTokenException("Invalid token!");
