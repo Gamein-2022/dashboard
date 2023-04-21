@@ -5,7 +5,9 @@ import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
+import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
 @RestController
@@ -28,10 +31,12 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final TimeRepository timeRepository;
+    private final UserRepository userRepository;
     private final AuthService authService;
 
-    public AuthController(TimeRepository timeRepository, AuthService authService) {
+    public AuthController(TimeRepository timeRepository, UserRepository userRepository, AuthService authService) {
         this.timeRepository = timeRepository;
+        this.userRepository = userRepository;
         this.authService = authService;
     }
 
@@ -73,15 +78,18 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
-            Time time = timeRepository.findById(1L).get();
-            if (time.getIsGamePaused()){
-                throw new InvalidTokenException("بازی متوقف است .");
-            }
+
             String token = request.getHeader("Authorization");
             if (token == null || token.length() < 8) {
                 throw new InvalidTokenException("Invalid token!");
             }
             AuthInfo result = authService.extractAuthInfoFromToken(token.substring(7));
+            User user = userRepository.findById(result.getUserId()).get();
+            Time time = timeRepository.findById(1L).get();
+            if (time.getIsGamePaused() && ! user.isAdmin()){
+                throw new InvalidTokenException("بازی متوقف است .");
+            }
+
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidTokenException e) {
             logger.error(e.toString());
