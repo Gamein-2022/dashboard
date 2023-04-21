@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class PanelServiceHandler implements PanelService{
@@ -33,7 +35,7 @@ public class PanelServiceHandler implements PanelService{
     @Override
     public void restartGame() {
         Time time = timeRepository.findById(1L).get();
-        time.setBeginTime(LocalDateTime.now());
+        time.setBeginTime(LocalDateTime.now(ZoneOffset.UTC));
         time.setStoppedTimeSeconds(0L);
         time.setLastStopTime(null);
         time.setIsGamePaused(false);
@@ -43,7 +45,7 @@ public class PanelServiceHandler implements PanelService{
     @Override
     public void pauseGame() {
         Time time = timeRepository.findById(1L).get();
-        time.setLastStopTime(LocalDateTime.now());
+        time.setLastStopTime(LocalDateTime.now(ZoneOffset.UTC));
         time.setIsGamePaused(true);
         timeRepository.save(time);
     }
@@ -51,9 +53,9 @@ public class PanelServiceHandler implements PanelService{
     @Override
     public void resumeGame() {
         Time time = timeRepository.findById(1L).get();
-        Long duration = Duration.between(time.getLastStopTime(),LocalDateTime.now()).toSeconds();
+        Long duration = Duration.between(time.getLastStopTime(),LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
         time.setLastStopTime(null);
-        time.setStoppedTimeSeconds(duration);
+        time.setStoppedTimeSeconds(time.getStoppedTimeSeconds() + duration);
         time.setIsGamePaused(false);
         timeRepository.save(time);
     }
