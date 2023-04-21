@@ -36,7 +36,7 @@ public class Product {
     private List<Integer> regions;
 
     @Column(name = "price")
-    private Double price;
+    private Integer price;
 
     @Column(name = "available_day")
     private Integer availableDay;
