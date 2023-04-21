@@ -1,6 +1,9 @@
 package gamein2022.backend.dashboard.web.controller;
 
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
+import gamein2022.backend.dashboard.core.exception.UnauthorizedException;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
+import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
@@ -18,15 +21,22 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice(assignableTypes = {ProfileController.class,TeamController.class})
 public class InitController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final TimeRepository timeRepository;
     private final AuthService authService;
 
-    public InitController(AuthService authService) {
+    public InitController(TimeRepository timeRepository, AuthService authService) {
+        this.timeRepository = timeRepository;
         this.authService = authService;
     }
 
 
     @ModelAttribute(name = "authInfo")
     public AuthInfo getLoginInformation(HttpServletRequest request) throws InvalidTokenException {
+        Time time = timeRepository.findById(1L).get();
+        if (time.getIsGamePaused()){
+            throw new InvalidTokenException("بازی متوقف است .");
+        }
         String token = request.getHeader("Authorization");
         if (token == null || token.length() < 8) {
             throw new InvalidTokenException("Invalid token!");
