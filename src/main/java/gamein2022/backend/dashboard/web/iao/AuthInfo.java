@@ -12,4 +12,5 @@ public class AuthInfo implements BaseResultDTO {
     private Long teamId;
     private String teamName;
     private Long balance;
+    private Boolean isGamePaused;
 }

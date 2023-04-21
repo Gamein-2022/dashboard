@@ -4,6 +4,7 @@ import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
@@ -27,6 +28,8 @@ public class AuthServiceHandler implements AuthService {
 
     private final UserRepository userRepository;
     private final TimeRepository timeRepository;
+
+
 
     public AuthServiceHandler(UserRepository userRepository, TimeRepository timeRepository) {
         this.userRepository = userRepository;
@@ -60,6 +63,8 @@ public class AuthServiceHandler implements AuthService {
         }
         throw new UserNotFoundException();
     }
+
+
 
     @Override
     public RegisterAndLoginResultDTO register(String phone, String email, String password)
@@ -105,13 +110,15 @@ public class AuthServiceHandler implements AuthService {
             throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
         }
 
-        User user = userOptional.get();
 
+        User user = userOptional.get();
+        Time time = timeRepository.findById(1L).get();
         return new AuthInfo(
                 user.getId(),
                 user.getTeam() == null ? null : user.getTeam().getId(),
                 user.getTeam() == null ? null : user.getTeam().getName(),
-                user.getTeam() == null ? null : user.getTeam().getBalance());
+                user.getTeam() == null ? null : user.getTeam().getBalance(),
+                time.getIsGamePaused());
     }
 
     @Override
@@ -155,6 +162,16 @@ public class AuthServiceHandler implements AuthService {
         timeResultDTO.setMonth(month);
         timeResultDTO.setYear(year);
         timeResultDTO.setEra(era);
+        timeResultDTO.setIsGamePaused(time.getIsGamePaused());
         return timeResultDTO;
+    }
+
+    @Override
+    public User getUserById(Long userId) throws BadRequestException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException("User does not exist!");
+        }
+        return userOptional.get();
     }
 }
