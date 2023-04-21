@@ -2,20 +2,12 @@ package gamein2022.backend.dashboard.infrastructure.service.team;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
-import gamein2022.backend.dashboard.core.sharedkernel.entity.Log;
-import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
-import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
-import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.*;
 import gamein2022.backend.dashboard.core.sharedkernel.enums.LogType;
-import gamein2022.backend.dashboard.infrastructure.repository.LogRepository;
-import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
-import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
-import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
-import gamein2022.backend.dashboard.web.dto.result.GetTeamLogsResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.LogDTO;
-import gamein2022.backend.dashboard.web.dto.result.RegionResultDTO;
-import gamein2022.backend.dashboard.web.dto.result.TeamInfoResultDTO;
+import gamein2022.backend.dashboard.infrastructure.repository.*;
+import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
+import gamein2022.backend.dashboard.web.iao.BuildingInfo;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -23,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceHandler {
@@ -34,12 +25,18 @@ public class TeamServiceHandler {
 
     private final LogRepository logRepository;
 
+    private final BuildingRepository buildingRepository;
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository) {
+    private final StorageProductRepository storageProductRepository;
+
+
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
         this.logRepository = logRepository;
+        this.buildingRepository = buildingRepository;
+        this.storageProductRepository = storageProductRepository;
     }
 
     public RegionResultDTO setTeamRegion(long teamId, String teamRegion) throws UserNotFoundException {
@@ -109,5 +106,20 @@ public class TeamServiceHandler {
                 .stream().map(Log::toDto).toList());
         secList.addAll(firstList);
         return new GetTeamLogsResultDTO(secList);
+    }
+
+    public GetTeamWealthResultDTO getTeamWealth(Long teamId){
+        long wealth = 0L;
+        Team team = teamRepository.findById(teamId).get();
+        List<StorageProduct> teamsProduct = storageProductRepository.findAllByTeamId(teamId);
+        for (StorageProduct storageProduct : teamsProduct){
+            wealth += storageProduct.getProduct().getPrice() * storageProduct.getInStorageAmount();
+        }
+        List<Building> teamBuildings = buildingRepository.findAllByTeamId(teamId);
+        for (Building building : teamBuildings){
+            wealth += BuildingInfo.getInfo(building.getType()).getBuildPrice();
+        }
+        wealth += team.getBalance();
+        return new GetTeamWealthResultDTO(wealth);
     }
 }
