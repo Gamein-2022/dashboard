@@ -85,13 +85,26 @@ public class TeamController {
         }
     }
 
-    @GetMapping("wealth")
-    public ResponseEntity<BaseResultDTO> getTeamWealth(
-            @ModelAttribute("authInfo") AuthInfo authInfo
+//    @GetMapping("wealth")
+//    public ResponseEntity<BaseResultDTO> getTeamWealth(
+//            @ModelAttribute("authInfo") AuthInfo authInfo
+//    ){
+//        try {
+//            GetTeamWealthResultDTO resultDTO = teamServiceHandler.getTeamWealth(authInfo.getTeamId());
+//            return new ResponseEntity<>(resultDTO,HttpStatus.OK);
+//        }catch (Exception e){
+//            logger.error(e.toString(),e);
+//            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//            return new ResponseEntity<>(error, error.getStatus());
+//        }
+//    }
+
+    @GetMapping("rank")
+    public ResponseEntity<BaseResultDTO> getTeamRank (
+        @ModelAttribute("authInfo") AuthInfo authInfo
     ){
         try {
-            GetTeamWealthResultDTO resultDTO = teamServiceHandler.getTeamWealth(authInfo.getTeamId());
-            return new ResponseEntity<>(resultDTO,HttpStatus.OK);
+            return new ResponseEntity<>(teamServiceHandler.getTeamRank(authInfo.getTeamId()),HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.toString(),e);
             ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
