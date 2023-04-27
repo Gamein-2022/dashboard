@@ -8,6 +8,7 @@ import gamein2022.backend.dashboard.infrastructure.repository.*;
 import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import gamein2022.backend.dashboard.web.iao.BuildingInfo;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@EnableScheduling
 public class TeamServiceHandler {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
@@ -68,6 +70,7 @@ public class TeamServiceHandler {
         regionResultDTO.setTeamRegionId(team.getRegion());
         regionResultDTO.setLastRegionId(team.getRegion());
         regionResultDTO.setRemainingTime(remainingTime);
+        regionResultDTO.setTeamBalance(team.getBalance());
         return regionResultDTO;
     }
 
