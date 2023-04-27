@@ -111,7 +111,11 @@ public class AuthServiceHandler implements AuthService {
 
 
         User user = userOptional.get();
-        Team team = user.getTeam();
+        int region = 0;
+        if (user.getTeam() != null){
+            Team team = user.getTeam();
+            region = team.getRegion();
+        }
         Time time = timeRepository.findById(1L).get();
         return new AuthInfo(
                 user.getId(),
@@ -119,7 +123,7 @@ public class AuthServiceHandler implements AuthService {
                 user.getTeam() == null ? null : user.getTeam().getName(),
                 user.getTeam() == null ? null : user.getTeam().getBalance(),
                 time.getIsGamePaused(),
-                team.getRegion());
+                region);
     }
 
     @Override
