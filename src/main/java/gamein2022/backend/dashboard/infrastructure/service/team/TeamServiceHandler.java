@@ -5,15 +5,18 @@ import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.*;
 import gamein2022.backend.dashboard.core.sharedkernel.enums.LogType;
 import gamein2022.backend.dashboard.infrastructure.repository.*;
+import gamein2022.backend.dashboard.infrastructure.util.RestUtil;
 import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import gamein2022.backend.dashboard.web.iao.BuildingInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -31,14 +34,20 @@ public class TeamServiceHandler {
 
     private final StorageProductRepository storageProductRepository;
 
+    private final RegionRepository regionRepository;
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository) {
+    @Value("${live.data.url}")
+    private String liveUrl;
+
+
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, RegionRepository regionRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
         this.logRepository = logRepository;
         this.buildingRepository = buildingRepository;
         this.storageProductRepository = storageProductRepository;
+        this.regionRepository = regionRepository;
     }
 
     List<WealthDto> teamsWealth = new ArrayList<>();
@@ -63,8 +72,8 @@ public class TeamServiceHandler {
 
         Time time = timeRepository.findById(1L).get();
         LocalDateTime endDate = time.getBeginTime().plusSeconds(time.getChooseRegionDuration());
-        LocalDateTime now = LocalDateTime.now();
-        Long remainingTime = Duration.between(now, endDate).toSeconds();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        Long remainingTime = Duration.between(now, endDate).toSeconds() - time.getStoppedTimeSeconds();
         Team team = teamOptional.get();
         RegionResultDTO regionResultDTO = new RegionResultDTO();
         regionResultDTO.setTeamRegionId(team.getRegion());
@@ -177,5 +186,38 @@ public class TeamServiceHandler {
         teamsWealth = wealths;
     }
 
+    @Scheduled(fixedDelay = 10,timeUnit = TimeUnit.SECONDS)
+    public void payRegionPrice(){
+        Time time = timeRepository.findById(1L).get();
+        Long duration =  Duration.between(time.getBeginTime(),LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
+        boolean isChooseRegionFinished = duration - time.getStoppedTimeSeconds() > time.getChooseRegionDuration();
+        if (! time.getIsRegionPayed() && isChooseRegionFinished){
+            List<Region> regions = regionRepository.findAll();
+            List<Team> teams = teamRepository.findAll();
+            for (Team team : teams){
+                if (team.getRegion() == 0){
+                    Random random = new Random();
+                    team.setRegion(random.nextInt(8) + 1);
+                    Region region = regions.get(team.getRegion());
+                    region.setRegionPopulation(region.getRegionPopulation() + 1);
+                }
+            }
+            for (Region region: regions){
+                region.setRegionPayed(calculateRegionPrice(region.getRegionPopulation()));
+            }
+            for (Team team : teams){
+                team.setBalance(team.getBalance() - regions.get(team.getRegion()).getRegionPayed());
+            }
+            regionRepository.saveAll(regions);
+            teamRepository.saveAll(teams);
+            time.setIsRegionPayed(true);
+            timeRepository.save(time);
+            String text = "هزینه زمین از حساب شما برداشت شد.";
+            RestUtil.sendNotificationToAll(text,"SUCCESS",liveUrl);
+        }
+    }
+    private Long calculateRegionPrice(Long currentPopulation) {
+        return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (100 - 0.26)))))) * 10_000_000);
+    }
 
 }

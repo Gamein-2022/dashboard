@@ -15,7 +15,6 @@ public class JwtUtils {
     private static final String secret = "some-very-very-ultra-top-secret";
 
     public static String generateToken(Long userId) {
-        System.out.println(secret);
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .setIssuedAt(new Date())

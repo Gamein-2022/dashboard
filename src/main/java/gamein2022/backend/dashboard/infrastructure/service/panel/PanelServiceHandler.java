@@ -39,6 +39,7 @@ public class PanelServiceHandler implements PanelService{
         time.setStoppedTimeSeconds(0L);
         time.setLastStopTime(null);
         time.setIsGamePaused(false);
+        time.setIsRegionPayed(false);
         timeRepository.save(time);
     }
 

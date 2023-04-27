@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class RestUtil {
@@ -24,6 +25,21 @@ public class RestUtil {
         ResponseEntity<String> response = restTemplate.exchange(url, method, request, String.class);
 
         return response.getBody();
+    }
+
+    public static void sendNotificationToATeam(String text,String type,String teamId,String liveUrl){
+        Map<String, String> params = new HashMap<>();
+        params.put("teamId", teamId);
+        params.put("type", type);
+        params.put("message", text);
+        RestUtil.sendRawRequest(liveUrl + "/team", params, HttpMethod.POST, MediaType.APPLICATION_JSON);
+    }
+
+    public static void sendNotificationToAll(String text,String type,String liveUrl){
+        Map<String, String> params = new HashMap<>();
+        params.put("type", type);
+        params.put("message", text);
+        RestUtil.sendRawRequest(liveUrl, params, HttpMethod.POST, MediaType.APPLICATION_JSON);
     }
 
     public static String sendRawRequestByToken(String token, String url, Map<String, String> params, HttpMethod method, MediaType mediaType) {

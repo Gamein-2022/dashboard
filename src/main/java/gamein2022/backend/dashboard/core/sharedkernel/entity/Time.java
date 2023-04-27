@@ -36,4 +36,7 @@ public class Time {
     @Column(name = "is_game_paused")
     private Boolean isGamePaused;
 
+    @Column(name = "is_region_payed")
+    private Boolean isRegionPayed;
+
 }
