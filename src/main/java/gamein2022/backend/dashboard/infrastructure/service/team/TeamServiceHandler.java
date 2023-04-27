@@ -147,7 +147,7 @@ public class TeamServiceHandler {
                 Collections.reverse(upper);
                 resultDTO.setUpper(upper);
                 List<WealthDto> lower = new ArrayList<>();
-                for (int j = 1; j < Math.min(4, teamsWealth.size() - 1 - j); j++){
+                for (int j = 1; j < Math.min(4, teamsWealth.size() - i); j++){
                     lower.add(teamsWealth.get(i + j));
                 }
                 resultDTO.setLower(lower);
@@ -173,7 +173,7 @@ public class TeamServiceHandler {
             wealthDto.setWealth(getTeamWealth(team.getId()));
             wealths.add(wealthDto);
         }
-        wealths.sort(Comparator.comparing(WealthDto::getWealth));
+        wealths.sort(Comparator.comparing(WealthDto::getWealth).reversed());
         teamsWealth = wealths;
     }
 
