@@ -10,4 +10,5 @@ public class WealthDto {
     private Long wealth;
     private Long brand;
     private Long teamId;
+    private String teamName;
 }

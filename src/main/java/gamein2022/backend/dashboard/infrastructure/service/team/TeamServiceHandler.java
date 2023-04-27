@@ -180,6 +180,7 @@ public class TeamServiceHandler {
             wealthDto.setBrand(10L);
             //TODO fix mock brand
             wealthDto.setWealth(getTeamWealth(team.getId()));
+            wealthDto.setTeamName(team.getName());
             wealths.add(wealthDto);
         }
         wealths.sort(Comparator.comparing(WealthDto::getWealth).reversed());
