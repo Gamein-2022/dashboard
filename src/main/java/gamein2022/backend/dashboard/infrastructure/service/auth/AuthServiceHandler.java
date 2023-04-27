@@ -7,6 +7,7 @@ import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
+import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.infrastructure.util.JwtUtils;
@@ -28,7 +29,6 @@ public class AuthServiceHandler implements AuthService {
 
     private final UserRepository userRepository;
     private final TimeRepository timeRepository;
-
 
 
     public AuthServiceHandler(UserRepository userRepository, TimeRepository timeRepository) {
@@ -63,7 +63,6 @@ public class AuthServiceHandler implements AuthService {
         }
         throw new UserNotFoundException();
     }
-
 
 
     @Override
@@ -112,13 +111,15 @@ public class AuthServiceHandler implements AuthService {
 
 
         User user = userOptional.get();
+        Team team = user.getTeam();
         Time time = timeRepository.findById(1L).get();
         return new AuthInfo(
                 user.getId(),
                 user.getTeam() == null ? null : user.getTeam().getId(),
                 user.getTeam() == null ? null : user.getTeam().getName(),
                 user.getTeam() == null ? null : user.getTeam().getBalance(),
-                time.getIsGamePaused());
+                time.getIsGamePaused(),
+                team.getRegion());
     }
 
     @Override
@@ -128,7 +129,6 @@ public class AuthServiceHandler implements AuthService {
         Long stoppedSeconds = time.getStoppedTimeSeconds();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         long durationSeconds = Duration.between(beginDate, now).toSeconds() - stoppedSeconds;
-
 
 
         long daySeconds = 8L;
