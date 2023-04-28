@@ -39,4 +39,7 @@ public class Time {
     @Column(name = "is_region_payed", columnDefinition = "boolean default false")
     private Boolean isRegionPayed;
 
+    @Column(name = "scale", nullable = false, columnDefinition = "bigint default 0.25")
+    private Long scale = 1000000L;
+
 }

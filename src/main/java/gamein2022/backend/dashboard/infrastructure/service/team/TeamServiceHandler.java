@@ -230,6 +230,9 @@ public class TeamServiceHandler {
     }
 
     private Long calculateRegionPrice(Long currentPopulation) {
-        return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (100 - 0.26)))))) * 10_000_000);
+        Time time = timeRepository.findById(1L).get();
+        Long scale = time.getScale();
+        Integer teamsCount = teamRepository.getCount();
+        return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (teamsCount - 0.26)))))) * scale);
     }
 }
