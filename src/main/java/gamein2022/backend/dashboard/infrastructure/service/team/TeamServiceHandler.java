@@ -187,8 +187,8 @@ public class TeamServiceHandler {
         teamsWealth = wealths;
     }
 
-    @Scheduled(fixedDelay = 10,timeUnit = TimeUnit.SECONDS)
-    public void payRegionPrice(){
+    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
+    public void payRegionPrice() {
         Time time = timeRepository.findById(1L).get();
         Long duration =  Duration.between(time.getBeginTime(),LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
         boolean isChooseRegionFinished = duration - time.getStoppedTimeSeconds() > time.getChooseRegionDuration();
@@ -217,8 +217,8 @@ public class TeamServiceHandler {
             RestUtil.sendNotificationToAll(text,"SUCCESS",liveUrl);
         }
     }
+
     private Long calculateRegionPrice(Long currentPopulation) {
         return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (100 - 0.26)))))) * 10_000_000);
     }
-
 }

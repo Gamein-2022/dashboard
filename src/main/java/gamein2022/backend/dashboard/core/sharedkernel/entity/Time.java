@@ -33,10 +33,10 @@ public class Time {
     @Column(name = "last_stop")
     private LocalDateTime lastStopTime;
 
-    @Column(name = "is_game_paused")
+    @Column(name = "is_game_paused", columnDefinition = "boolean default false")
     private Boolean isGamePaused;
 
-    @Column(name = "is_region_payed")
+    @Column(name = "is_region_payed", columnDefinition = "boolean default false")
     private Boolean isRegionPayed;
 
 }
