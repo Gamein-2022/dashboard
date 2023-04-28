@@ -39,7 +39,7 @@ public class TeamController {
         }
     }
 
-    @PostMapping("region")
+    /*@PostMapping("region")
     public ResponseEntity<BaseResultDTO> setTeamRegion(
             @ModelAttribute("authInfo") AuthInfo authInfo,
             @RequestBody SetTeamRegionRequestDTO setTeamRegionRequestDTO
@@ -51,7 +51,7 @@ public class TeamController {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(new ErrorResultDTO("Team Not Found", HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

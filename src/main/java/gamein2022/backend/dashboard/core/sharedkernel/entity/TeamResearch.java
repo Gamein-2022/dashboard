@@ -35,7 +35,13 @@ public class TeamResearch {
     @Column(name = "end_time")
     private Date endTime;
 
-    public TeamResearchDTO toDTO() {
-        return new TeamResearchDTO(subject.toDTO(), beginTime, endTime);
+    @Column(name = "paid_amount")
+    private int paidAmount;
+
+    public TeamResearchDTO toDTO(long balance, int price, int duration) {
+        return new TeamResearchDTO(subject.toDTO(), paidAmount, beginTime, endTime, endTime == null ? "not-started" :
+                endTime.before(new Date()) ?
+                        "done" :
+                        "doing", balance, price, duration);
     }
 }
