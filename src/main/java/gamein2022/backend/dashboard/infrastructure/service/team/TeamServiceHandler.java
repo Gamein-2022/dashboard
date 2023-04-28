@@ -210,7 +210,7 @@ public class TeamServiceHandler {
                 if (team.getRegion() == 0){
                     Random random = new Random();
                     team.setRegion(random.nextInt(8) + 1);
-                    Region region = regions.get(team.getRegion());
+                    Region region = regions.get(team.getRegion() - 1);
                     region.setRegionPopulation(region.getRegionPopulation() + 1);
                 }
             }
