@@ -11,6 +11,7 @@ import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.infrastructure.util.JwtUtils;
+import gamein2022.backend.dashboard.infrastructure.util.TimeUtil;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.TimeResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
@@ -129,45 +130,7 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public TimeResultDTO getTime() {
         Time time = timeRepository.findById(1L).get();
-        LocalDateTime beginDate = time.getBeginTime();
-        Long stoppedSeconds = time.getStoppedTimeSeconds();
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        long durationSeconds = Duration.between(beginDate, now).toSeconds() - stoppedSeconds;
-
-
-        long daySeconds = 8L;
-        long monthSeconds = 30L * daySeconds;
-        long yearSeconds = 12 * monthSeconds;
-        long daysFromBeginning = durationSeconds / daySeconds;
-        long monthFromBeginning = durationSeconds / monthSeconds;
-        long yearFromBeginning = durationSeconds / yearSeconds;
-
-        byte era = 0;
-        if (daysFromBeginning >= 7425)
-            era = 4;
-        else if (daysFromBeginning >= 4688)
-            era = 3;
-        else if (daysFromBeginning >= 2738)
-            era = 2;
-        else if (daysFromBeginning >= 1163) {
-            era = 1;
-        }
-
-        long year = 2002 + (yearFromBeginning) + 1;
-
-        long month = ((8 + monthFromBeginning) % 12) + 1;
-
-        long day = ((14 + daysFromBeginning) % 30) + 1;
-
-
-        TimeResultDTO timeResultDTO = new TimeResultDTO();
-        timeResultDTO.setSecondOfDate(durationSeconds);
-        timeResultDTO.setDay(day);
-        timeResultDTO.setMonth(month);
-        timeResultDTO.setYear(year);
-        timeResultDTO.setEra(era);
-        timeResultDTO.setIsGamePaused(time.getIsGamePaused());
-        return timeResultDTO;
+        return TimeUtil.getTime(time);
     }
 
     @Override
