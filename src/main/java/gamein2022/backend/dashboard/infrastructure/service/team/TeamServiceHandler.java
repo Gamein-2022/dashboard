@@ -84,6 +84,7 @@ public class TeamServiceHandler {
         regionResultDTO.setRemainingTime(remainingTime);
         regionResultDTO.setTeamBalance(team.getBalance());
         return regionResultDTO;
+
     }
 
     public TeamInfoResultDTO createTeam(Long userId, String teamName) throws UserNotFoundException, BadRequestException {
