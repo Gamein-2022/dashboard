@@ -102,7 +102,7 @@ public class TeamServiceHandler {
         team.setUsers(new ArrayList<>());
         team.getUsers().add(user);
         team.setOwner(user);
-        team.setBalance(1000000000);
+        team.setBalance(212_000_000);
 
         teamRepository.save(team);
 
