@@ -170,6 +170,10 @@ public class TeamServiceHandler {
         return resultDTO;
     }
 
+    public List<WealthDto> getTop100(){
+        return teamsWealth.subList(0,Math.min(teamsWealth.size(),100));
+    }
+
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     public void updateRanks() {
         List<Team> teams = teamRepository.findAll();
