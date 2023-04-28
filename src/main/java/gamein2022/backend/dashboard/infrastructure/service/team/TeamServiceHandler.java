@@ -36,11 +36,13 @@ public class TeamServiceHandler {
 
     private final RegionRepository regionRepository;
 
+    private final TeamResearchRepository teamResearchRepository;
+
     @Value("${live.data.url}")
     private String liveUrl;
 
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, RegionRepository regionRepository) {
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, RegionRepository regionRepository, TeamResearchRepository teamResearchRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
@@ -48,6 +50,7 @@ public class TeamServiceHandler {
         this.buildingRepository = buildingRepository;
         this.storageProductRepository = storageProductRepository;
         this.regionRepository = regionRepository;
+        this.teamResearchRepository = teamResearchRepository;
     }
 
     List<WealthDto> teamsWealth = new ArrayList<>();
@@ -134,6 +137,10 @@ public class TeamServiceHandler {
         for (Building building : teamBuildings) {
             wealth += BuildingInfo.getInfo(building.getType()).getBuildPrice();
         }
+        List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeAfter(teamId,new Date());
+        for (TeamResearch teamResearch : teamResearches){
+            wealth += teamResearch.getPaidAmount();
+        }
         wealth += team.getBalance();
         return wealth;
     }
@@ -168,6 +175,10 @@ public class TeamServiceHandler {
             }
         }
         return resultDTO;
+    }
+
+    public List<WealthDto> getTop100(){
+        return teamsWealth.subList(0,Math.min(teamsWealth.size(),100));
     }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)

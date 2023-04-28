@@ -10,6 +10,11 @@ import java.util.Date;
 @Getter
 public class TeamResearchDTO {
     private ResearchSubjectDTO subject;
+    private int paidAmount;
     private Date beginTime;
     private Date endTime;
+    private String status;
+    private long balance;
+    private int price;
+    private int duration;
 }

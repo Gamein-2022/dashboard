@@ -4,13 +4,15 @@ import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
+import gamein2022.backend.dashboard.infrastructure.service.team.TeamService;
+import gamein2022.backend.dashboard.infrastructure.service.team.TeamServiceHandler;
+import gamein2022.backend.dashboard.web.dto.result.GetTop100Result;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.TimeZone;
 
 @Service
 public class PanelServiceHandler implements PanelService{
@@ -18,9 +20,12 @@ public class PanelServiceHandler implements PanelService{
     private final TeamRepository teamRepository;
     private final TimeRepository timeRepository;
 
-    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository) {
+    private final TeamServiceHandler teamService;
+
+    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, TeamServiceHandler teamService) {
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
+        this.teamService = teamService;
     }
 
     @Override
@@ -60,4 +65,13 @@ public class PanelServiceHandler implements PanelService{
         time.setIsGamePaused(false);
         timeRepository.save(time);
     }
+
+    @Override
+    public GetTop100Result getTop100() {
+        GetTop100Result getTop100Result = new GetTop100Result();
+        getTop100Result.setTopTeams(teamService.getTop100());
+        return getTop100Result;
+    }
+
+
 }
