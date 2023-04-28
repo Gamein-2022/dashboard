@@ -219,7 +219,7 @@ public class TeamServiceHandler {
                 region.setRegionPayed(calculateRegionPrice(region.getRegionPopulation()));
             }
             for (Team team : teams){
-                team.setBalance(team.getBalance() - regions.get(team.getRegion()).getRegionPayed());
+                team.setBalance(team.getBalance() - regions.get(team.getRegion() - 1).getRegionPayed());
             }
             regionRepository.saveAll(regions);
             teamRepository.saveAll(teams);
