@@ -1,9 +1,6 @@
 package gamein2022.backend.dashboard.web.controller;
 
-import gamein2022.backend.dashboard.core.exception.BadRequestException;
-import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
-import gamein2022.backend.dashboard.core.exception.UserAlreadyExist;
-import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.exception.*;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
@@ -87,13 +84,17 @@ public class AuthController {
             User user = userRepository.findById(result.getUserId()).get();
             Time time = timeRepository.findById(1L).get();
             if (time.getIsGamePaused() && ! user.isAdmin()){
-                throw new InvalidTokenException("بازی متوقف است .");
+                throw new PauseException("بازی متوقف است .");
             }
 
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (InvalidTokenException e) {
             logger.error(e.toString());
             ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(error, error.getStatus());
+        } catch (PauseException e) {
+            logger.error(e.toString());
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.LOCKED);
             return new ResponseEntity<>(error, error.getStatus());
         }
     }
