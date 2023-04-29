@@ -13,7 +13,7 @@ public class TimeResultDTO implements BaseResultDTO {
     private Long month;
     private Long year;
     private Byte era;
-    private Long secondOfDate;
+    private Long durationMillis;
     private Boolean isGamePaused;
 
 }
