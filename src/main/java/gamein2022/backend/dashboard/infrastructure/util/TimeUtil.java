@@ -47,6 +47,7 @@ public class TimeUtil {
         timeResultDTO.setMonth(month);
         timeResultDTO.setYear(year);
         timeResultDTO.setEra(era);
+        timeResultDTO.setIsGamePaused(time.getIsGamePaused());
         return timeResultDTO;
     }
 }

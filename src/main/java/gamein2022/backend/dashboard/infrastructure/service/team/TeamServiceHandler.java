@@ -84,6 +84,7 @@ public class TeamServiceHandler {
         regionResultDTO.setRemainingTime(remainingTime);
         regionResultDTO.setTeamBalance(team.getBalance());
         return regionResultDTO;
+
     }
 
     public TeamInfoResultDTO createTeam(Long userId, String teamName) throws UserNotFoundException, BadRequestException {
@@ -210,7 +211,7 @@ public class TeamServiceHandler {
                 if (team.getRegion() == 0){
                     Random random = new Random();
                     team.setRegion(random.nextInt(8) + 1);
-                    Region region = regions.get(team.getRegion());
+                    Region region = regions.get(team.getRegion() - 1);
                     region.setRegionPopulation(region.getRegionPopulation() + 1);
                 }
             }
@@ -218,7 +219,7 @@ public class TeamServiceHandler {
                 region.setRegionPayed(calculateRegionPrice(region.getRegionPopulation()));
             }
             for (Team team : teams){
-                team.setBalance(team.getBalance() - regions.get(team.getRegion()).getRegionPayed());
+                team.setBalance(team.getBalance() - regions.get(team.getRegion() - 1).getRegionPayed());
             }
             regionRepository.saveAll(regions);
             teamRepository.saveAll(teams);
@@ -230,6 +231,9 @@ public class TeamServiceHandler {
     }
 
     private Long calculateRegionPrice(Long currentPopulation) {
-        return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (100 - 0.26)))))) * 10_000_000);
+        Time time = timeRepository.findById(1L).get();
+        Long scale = time.getScale();
+        Integer teamsCount = teamRepository.getCount();
+        return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (teamsCount - 0.26)))))) * scale);
     }
 }
