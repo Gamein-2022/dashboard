@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: |
+             export PATH=$PATH:/opt/gradle/gradle-8.1.1/bin
+             echo $PATH
+             gradle -v
              gradle  --stacktrace sonar \
               -Dsonar.projectKey=dashboard \
               -Dsonar.projectName='dashboard' \
@@ -21,6 +24,7 @@ jobs:
 
 
   build-dashboard:
+    needs: check-code
     runs-on: [self-hosted, linux]
     steps:
       - uses: actions/checkout@master
