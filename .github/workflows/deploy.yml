@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: |
-              ./gradlew  -x test --stacktrace sonar \
+             gradle  --stacktrace sonar \
               -Dsonar.projectKey=dashboard \
               -Dsonar.projectName='dashboard' \
               -Dsonar.host.url=http://192.168.0.202:9000 \
