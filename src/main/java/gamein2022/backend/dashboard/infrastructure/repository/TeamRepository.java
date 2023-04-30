@@ -4,8 +4,12 @@ import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT COUNT  (*) FROM Team ")
     Integer getCount();
+
+    Optional<Team> findTeamByName(String name);
 }
