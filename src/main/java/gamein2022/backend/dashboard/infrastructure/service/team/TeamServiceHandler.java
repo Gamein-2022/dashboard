@@ -226,7 +226,7 @@ public class TeamServiceHandler {
             time.setIsRegionPayed(true);
             timeRepository.save(time);
             String text = "هزینه زمین از حساب شما برداشت شد.";
-            RestUtil.sendNotificationToAll(text,"SUCCESS",liveUrl);
+            RestUtil.sendNotificationToAll(text,"UPDATE_BALANCE",liveUrl);
         }
     }
 
