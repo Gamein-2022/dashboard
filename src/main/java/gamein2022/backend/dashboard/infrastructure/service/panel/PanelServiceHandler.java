@@ -24,6 +24,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class PanelServiceHandler implements PanelService {
@@ -105,6 +106,7 @@ public class PanelServiceHandler implements PanelService {
         }else {
             Team team = new Team();
             team.setName(teamName);
+            team.setRegion(new Random().nextInt(8) + 1);
             team.setUsers(new ArrayList<>());
             team.getUsers().add(user);
             team.setOwner(user);
