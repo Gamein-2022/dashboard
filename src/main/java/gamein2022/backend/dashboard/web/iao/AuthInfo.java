@@ -14,4 +14,6 @@ public class AuthInfo implements BaseResultDTO {
     private Long balance;
     private Boolean isGamePaused;
     private Integer region;
+    private String phone;
+    private String email;
 }

@@ -124,7 +124,10 @@ public class AuthServiceHandler implements AuthService {
                 user.getTeam() == null ? null : user.getTeam().getName(),
                 user.getTeam() == null ? null : user.getTeam().getBalance(),
                 time.getIsGamePaused(),
-                region);
+                region,
+                user.getPhone(),
+                user.getEmail()
+        );
     }
 
     @Override

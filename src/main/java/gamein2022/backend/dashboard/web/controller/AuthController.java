@@ -75,7 +75,6 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
-
             String token = request.getHeader("Authorization");
             if (token == null || token.length() < 8) {
                 throw new InvalidTokenException("Invalid token!");
