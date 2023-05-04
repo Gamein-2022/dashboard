@@ -2,6 +2,7 @@ package gamein2022.backend.dashboard.web.controller;
 
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.sharedkernel.enums.LogType;
 import gamein2022.backend.dashboard.infrastructure.service.team.TeamServiceHandler;
 import gamein2022.backend.dashboard.web.dto.request.SetTeamRegionRequestDTO;
 import gamein2022.backend.dashboard.web.dto.request.TeamInfoRequestDTO;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("team")
@@ -73,10 +76,11 @@ public class TeamController {
 
     @GetMapping("logs")
     public ResponseEntity<BaseResultDTO> getTeamLogs(
-            @ModelAttribute("authInfo") AuthInfo authInfo
+            @ModelAttribute("authInfo") AuthInfo authInfo,
+            @RequestParam("t") LogType logType
     ) {
         try {
-            GetTeamLogsResultDTO result = teamServiceHandler.getTeamLogs(authInfo);
+            GetTeamLogsResultDTO result = teamServiceHandler.getTeamLogs(authInfo,logType);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e){
             logger.error(e.toString(),e);

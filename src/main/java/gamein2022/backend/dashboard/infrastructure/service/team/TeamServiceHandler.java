@@ -117,14 +117,16 @@ public class TeamServiceHandler {
         return new TeamInfoResultDTO(team.getName());
     }
 
-    public GetTeamLogsResultDTO getTeamLogs(AuthInfo authInfo) {
-        List<LogDTO> firstList = logRepository.findAllByTypeAndTeamId(LogType.ASSEMBLY, authInfo.getTeamId())
-                .stream().map(Log::toDto).toList();
-        ;
-        List<LogDTO> secList = new ArrayList<>(logRepository.findAllByTypeAndTeamId(LogType.PRODUCTION, authInfo.getTeamId())
-                .stream().map(Log::toDto).toList());
-        secList.addAll(firstList);
-        return new GetTeamLogsResultDTO(secList);
+    public GetTeamLogsResultDTO getTeamLogs(AuthInfo authInfo, LogType logType) {
+        List<LogDTO> logs;
+        if (logType.equals(LogType.DEFAULT)) {
+            logs = logRepository.findAllByTeamId(authInfo.getTeamId())
+                    .stream().map(Log::toDto).toList();
+        } else {
+            logs = logRepository.findAllByTypeAndTeamId(logType, authInfo.getTeamId())
+                    .stream().map(Log::toDto).toList();
+        }
+        return new GetTeamLogsResultDTO(logs);
     }
 
     public Long getTeamWealth(Long teamId) {
@@ -138,8 +140,8 @@ public class TeamServiceHandler {
         for (Building building : teamBuildings) {
             wealth += BuildingInfo.getInfo(building.getType()).getBuildPrice();
         }
-        List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeAfter(teamId,new Date());
-        for (TeamResearch teamResearch : teamResearches){
+        List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeAfter(teamId, new Date());
+        for (TeamResearch teamResearch : teamResearches) {
             wealth += teamResearch.getPaidAmount();
         }
         wealth += team.getBalance();
@@ -164,22 +166,22 @@ public class TeamServiceHandler {
                 Collections.reverse(upper);
                 resultDTO.setUpper(upper);
                 List<WealthDto> lower = new ArrayList<>();
-                for (int j = 1; j < Math.min(4, teamsWealth.size() - i); j++){
+                for (int j = 1; j < Math.min(4, teamsWealth.size() - i); j++) {
                     lower.add(teamsWealth.get(i + j));
                 }
                 resultDTO.setLower(lower);
 
             }
 
-            if (i == 100){
+            if (i == 100) {
                 resultDTO.setLastTopWealth(wealthDto.getWealth());
             }
         }
         return resultDTO;
     }
 
-    public List<WealthDto> getTop100(){
-        return teamsWealth.subList(0,Math.min(teamsWealth.size(),100));
+    public List<WealthDto> getTop100() {
+        return teamsWealth.subList(0, Math.min(teamsWealth.size(), 100));
     }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
