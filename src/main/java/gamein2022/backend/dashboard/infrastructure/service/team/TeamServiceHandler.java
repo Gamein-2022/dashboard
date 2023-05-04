@@ -199,36 +199,36 @@ public class TeamServiceHandler {
         teamsWealth = wealths;
     }
 
-    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
-    public void payRegionPrice() {
-        Time time = timeRepository.findById(1L).get();
-        Long duration =  Duration.between(time.getBeginTime(),LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
-        boolean isChooseRegionFinished = duration - time.getStoppedTimeSeconds() > time.getChooseRegionDuration();
-        if (! time.getIsRegionPayed() && isChooseRegionFinished){
-            List<Region> regions = regionRepository.findAll();
-            List<Team> teams = teamRepository.findAll();
-            for (Team team : teams){
-                if (team.getRegion() == 0){
-                    Random random = new Random();
-                    team.setRegion(random.nextInt(8) + 1);
-                    Region region = regions.get(team.getRegion() - 1);
-                    region.setRegionPopulation(region.getRegionPopulation() + 1);
-                }
-            }
-            for (Region region: regions){
-                region.setRegionPayed(calculateRegionPrice(region.getRegionPopulation()));
-            }
-            for (Team team : teams){
-                team.setBalance(team.getBalance() - regions.get(team.getRegion() - 1).getRegionPayed());
-            }
-            regionRepository.saveAll(regions);
-            teamRepository.saveAll(teams);
-            time.setIsRegionPayed(true);
-            timeRepository.save(time);
-            String text = "هزینه زمین از حساب شما برداشت شد.";
-            RestUtil.sendNotificationToAll(text,"UPDATE_BALANCE",liveUrl);
-        }
-    }
+//    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
+//    public void payRegionPrice() {
+//        Time time = timeRepository.findById(1L).get();
+//        Long duration =  Duration.between(time.getBeginTime(),LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
+//        boolean isChooseRegionFinished = duration - time.getStoppedTimeSeconds() > time.getChooseRegionDuration();
+//        if (! time.getIsRegionPayed() && isChooseRegionFinished){
+//            List<Region> regions = regionRepository.findAll();
+//            List<Team> teams = teamRepository.findAll();
+//            for (Team team : teams){
+//                if (team.getRegion() == 0){
+//                    Random random = new Random();
+//                    team.setRegion(random.nextInt(8) + 1);
+//                    Region region = regions.get(team.getRegion() - 1);
+//                    region.setRegionPopulation(region.getRegionPopulation() + 1);
+//                }
+//            }
+//            for (Region region: regions){
+//                region.setRegionPayed(calculateRegionPrice(region.getRegionPopulation()));
+//            }
+//            for (Team team : teams){
+//                team.setBalance(team.getBalance() - regions.get(team.getRegion() - 1).getRegionPayed());
+//            }
+//            regionRepository.saveAll(regions);
+//            teamRepository.saveAll(teams);
+//            time.setIsRegionPayed(true);
+//            timeRepository.save(time);
+//            String text = "هزینه زمین از حساب شما برداشت شد.";
+//            RestUtil.sendNotificationToAll(text,"UPDATE_BALANCE",liveUrl);
+//        }
+//    }
 
     private Long calculateRegionPrice(Long currentPopulation) {
         Time time = timeRepository.findById(1L).get();
