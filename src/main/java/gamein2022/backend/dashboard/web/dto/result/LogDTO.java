@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,5 +15,6 @@ public class LogDTO {
     private Long totalCost;
     private Long count;
     private String productName;
+    private LocalDateTime date;
 
 }
