@@ -42,12 +42,12 @@ public class Log {
     @Column(name = "timestamp", nullable = false, columnDefinition = "timestamp default (now() at time zone 'utc')")
     private LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 
-    public LogDTO toDto(){
+    public LogDTO toDto() {
         return new LogDTO(
                 type,
                 totalCost,
                 productCount,
-                product.getName(),
+                product == null ? null : product.getName(),
                 timestamp
         );
     }
