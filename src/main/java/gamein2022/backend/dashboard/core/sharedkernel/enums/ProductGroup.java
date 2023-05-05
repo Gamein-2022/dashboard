@@ -1,6 +1,7 @@
 package gamein2022.backend.dashboard.core.sharedkernel.enums;
 
 public enum ProductGroup {
+    RECYCLE,
     MODULES,
     PHONE_BODY,
     TABLET_BODY,
