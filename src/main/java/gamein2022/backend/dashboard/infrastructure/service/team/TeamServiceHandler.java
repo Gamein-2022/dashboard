@@ -119,6 +119,7 @@ public class TeamServiceHandler {
 
     public GetTeamLogsResultDTO getTeamLogs(AuthInfo authInfo, LogType logType) {
         List<LogDTO> logs;
+
         if (logType.equals(LogType.DEFAULT)) {
             logs = logRepository.findAllByTeamId(authInfo.getTeamId())
                     .stream().map(Log::toDto).toList();
