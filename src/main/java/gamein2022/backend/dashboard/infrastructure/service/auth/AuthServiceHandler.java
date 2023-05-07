@@ -114,8 +114,7 @@ public class AuthServiceHandler implements AuthService {
         User user = userOptional.get();
         int region = 0;
         if (user.getTeam() != null){
-            Team team = user.getTeam();
-            region = team.getRegion();
+            region = user.getTeam().getRegion();
         }
         Time time = timeRepository.findById(1L).get();
         return new AuthInfo(

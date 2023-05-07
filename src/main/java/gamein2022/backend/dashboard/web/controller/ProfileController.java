@@ -4,7 +4,6 @@ import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.infrastructure.service.profile.ProfileService;
 import gamein2022.backend.dashboard.web.dto.request.ProfileInfoRequestDTO;
-import gamein2022.backend.dashboard.web.dto.request.TeamInfoRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.slf4j.Logger;

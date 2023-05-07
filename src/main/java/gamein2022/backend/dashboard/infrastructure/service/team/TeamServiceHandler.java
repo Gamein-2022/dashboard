@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@EnableScheduling
 public class TeamServiceHandler {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;

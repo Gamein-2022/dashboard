@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.servlet.http.HttpServletRequest;
 
 
-@ControllerAdvice(assignableTypes = {ProfileController.class,TeamController.class})
+@ControllerAdvice(assignableTypes = {ProfileController.class,TeamController.class,TeamBuildingController.class})
 public class InitController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

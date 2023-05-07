@@ -1,5 +1,6 @@
 package gamein2022.backend.dashboard.core.sharedkernel.entity;
 
+import gamein2022.backend.dashboard.web.dto.result.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,11 +31,8 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "persian_name")
-    private String persianName;
-
-    @Column(name = "english_name")
-    private String englishName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -44,4 +42,8 @@ public class User {
 
     @Column(name = "is_admin", columnDefinition = "boolean default false")
     private boolean isAdmin = false;
+
+    public UserDTO toDTO() {
+        return new UserDTO(id, name);
+    }
 }
