@@ -43,6 +43,12 @@ public class User {
     @Column(name = "is_admin", columnDefinition = "boolean default false")
     private boolean isAdmin = false;
 
+    @Column(name = "persian_name")
+    private String persianName;
+
+    @Column(name = "english_name")
+    private String englishName;
+
     public UserDTO toDTO() {
         return new UserDTO(id, name);
     }
