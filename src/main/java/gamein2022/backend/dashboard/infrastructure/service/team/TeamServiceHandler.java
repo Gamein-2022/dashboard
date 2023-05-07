@@ -5,12 +5,10 @@ import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.*;
 import gamein2022.backend.dashboard.core.sharedkernel.enums.LogType;
 import gamein2022.backend.dashboard.infrastructure.repository.*;
-import gamein2022.backend.dashboard.infrastructure.util.RestUtil;
 import gamein2022.backend.dashboard.web.dto.result.*;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
-import gamein2022.backend.dashboard.web.iao.BuildingInfo;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -35,13 +33,15 @@ public class TeamServiceHandler {
 
     private final RegionRepository regionRepository;
 
+    private final BuildingInfoRepository buildingInfoRepository;
+
     private final TeamResearchRepository teamResearchRepository;
 
     @Value("${live.data.url}")
     private String liveUrl;
 
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, RegionRepository regionRepository, TeamResearchRepository teamResearchRepository) {
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, RegionRepository regionRepository, BuildingInfoRepository buildingInfoRepository, TeamResearchRepository teamResearchRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
@@ -49,6 +49,7 @@ public class TeamServiceHandler {
         this.buildingRepository = buildingRepository;
         this.storageProductRepository = storageProductRepository;
         this.regionRepository = regionRepository;
+        this.buildingInfoRepository = buildingInfoRepository;
         this.teamResearchRepository = teamResearchRepository;
     }
 
@@ -131,6 +132,7 @@ public class TeamServiceHandler {
 
     public Long getTeamWealth(Long teamId) {
         long wealth = 0L;
+        Iterable<BuildingInfo> buildingInfos = buildingInfoRepository.findAll();
         Team team = teamRepository.findById(teamId).get();
         List<StorageProduct> teamsProduct = storageProductRepository.findAllByTeamId(teamId);
         for (StorageProduct storageProduct : teamsProduct) {
@@ -138,7 +140,13 @@ public class TeamServiceHandler {
         }
         List<Building> teamBuildings = buildingRepository.findAllByTeamId(teamId);
         for (Building building : teamBuildings) {
-            wealth += BuildingInfo.getInfo(building.getType()).getBuildPrice();
+            for (BuildingInfo buildingInfo : buildingInfos) {
+                if (buildingInfo.getType().equals(building.getType())) {
+                    wealth += buildingInfo.getBuildPrice();
+                    wealth += building.isUpgraded() ? buildingInfo.getUpgradePrice() : 0;
+                }
+            }
+
         }
         List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeAfter(teamId, new Date());
         for (TeamResearch teamResearch : teamResearches) {
