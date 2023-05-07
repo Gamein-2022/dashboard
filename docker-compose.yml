@@ -5,7 +5,7 @@ networks:
      
 services:
   dashboard:
-    image: dashboard:dev
+    image: registry.dariasystem.com/gamein/dashboard:dev
     container_name: dashboard
     restart: always
     ports:
@@ -13,14 +13,14 @@ services:
     networks:
       - gamein
     environment:
-      - spring.datasource.url=jdbc:postgresql://pgsql/gamein
+      - spring.datasource.url=jdbc:postgresql://192.168.0.223:5432/gamein
       - spring.datasource.username=gamein
       - spring.datasource.password=gamein123
       - live.data.url=http://192.168.0.222:8083/websocket/api/notify
 
 
   dashboard-1:
-    image: dashboard:dev
+    image: registry.dariasystem.com/gamein/dashboard:dev
     container_name: dashboard-1
     restart: always
     ports:
@@ -28,6 +28,7 @@ services:
     networks:
       - gamein
     environment:
-      - spring.datasource.url=jdbc:postgresql://pgsql/gamein
+      - spring.datasource.url=jdbc:postgresql://192.168.0.223:5432/gamein
       - spring.datasource.username=gamein
       - spring.datasource.password=gamein123
+      - live.data.url=http://192.168.0.222:8083/websocket/api/notify
