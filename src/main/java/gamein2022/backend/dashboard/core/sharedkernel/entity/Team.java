@@ -33,7 +33,7 @@ public class Team {
     @Column(name = "balance", nullable = false)
     private long balance;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "region")
