@@ -55,8 +55,8 @@ public class PanelServiceHandler implements PanelService {
 
     @Override
     public void restartGame() {
-        teamRepository.resetTeamsRegion();
-        regionRepository.resetAllRegions();
+//        teamRepository.resetTeamsRegion();
+//        regionRepository.resetAllRegions();
         Time time = timeRepository.findById(1L).get();
         time.setBeginTime(LocalDateTime.now(ZoneOffset.UTC));
         time.setStoppedTimeSeconds(0L);
