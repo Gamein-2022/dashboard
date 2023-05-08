@@ -13,8 +13,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     Integer getCount();
 
     @Modifying
-    @Query("UPDATE Team t set t.region = 0 where t.id is not null ")
+    @Query(value = "update teams set region = 0",nativeQuery = true)
     void resetTeamsRegion();
 
     Optional<Team> findTeamByName(String name);
+
 }
