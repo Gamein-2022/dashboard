@@ -13,7 +13,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     Integer getCount();
 
     @Modifying
-    @Query("UPDATE Team set region = 0 where true")
+    @Query("UPDATE Team t set t.region = 0 where t.id is not null ")
     void resetTeamsRegion();
 
     Optional<Team> findTeamByName(String name);

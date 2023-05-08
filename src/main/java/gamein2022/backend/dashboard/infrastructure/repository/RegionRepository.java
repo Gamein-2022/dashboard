@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface RegionRepository extends JpaRepository<Region,Long> {
     @Modifying
-    @Query("UPDATE Region SET regionPopulation = 0 where true")
+    @Query("UPDATE Region r SET r.regionPopulation = 0 where r.id is not null ")
     void resetAllRegions();
 }
