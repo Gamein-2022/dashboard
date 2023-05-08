@@ -11,5 +11,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT COUNT  (*) FROM Team ")
     Integer getCount();
 
+    @Query("UPDATE Team set region = 0 where true ")
+    void resetTeamsRegion();
+
     Optional<Team> findTeamByName(String name);
 }

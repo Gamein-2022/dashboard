@@ -6,15 +6,13 @@ import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
+import gamein2022.backend.dashboard.infrastructure.repository.RegionRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.infrastructure.service.team.TeamServiceHandler;
-import gamein2022.backend.dashboard.infrastructure.util.JwtUtils;
 import gamein2022.backend.dashboard.web.dto.result.GetTop100Result;
-import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
-import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,16 +30,16 @@ public class PanelServiceHandler implements PanelService {
     private final TeamRepository teamRepository;
     private final TimeRepository timeRepository;
 
-    private final AuthService authService;
+    private final RegionRepository regionRepository;
 
     private final UserRepository userRepository;
 
     private final TeamServiceHandler teamService;
 
-    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, AuthService authService, UserRepository userRepository, TeamServiceHandler teamService) {
+    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository,RegionRepository regionRepository, UserRepository userRepository, TeamServiceHandler teamService) {
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
-        this.authService = authService;
+        this.regionRepository = regionRepository;
         this.userRepository = userRepository;
         this.teamService = teamService;
     }
@@ -57,6 +55,8 @@ public class PanelServiceHandler implements PanelService {
 
     @Override
     public void restartGame() {
+        teamRepository.resetTeamsRegion();
+        regionRepository.resetAllRegions();
         Time time = timeRepository.findById(1L).get();
         time.setBeginTime(LocalDateTime.now(ZoneOffset.UTC));
         time.setStoppedTimeSeconds(0L);
@@ -110,7 +110,6 @@ public class PanelServiceHandler implements PanelService {
             team.setUsers(new ArrayList<>());
             team.getUsers().add(user);
             team.setOwner(user);
-            team.setBalance(212_000_000);
             teamRepository.save(team);
             user.setTeam(team);
             userRepository.save(user);
