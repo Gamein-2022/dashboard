@@ -74,6 +74,18 @@ public class TeamController {
         }
     }
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BaseResultDTO> getTeamInfo(@ModelAttribute("authInfo") AuthInfo authInfo) {
+        try {
+            return new ResponseEntity<>(teamServiceHandler.getTeamInfo(authInfo.getTeamId(), authInfo.getUserId()),
+                    HttpStatus.OK);
+        } catch (BadRequestException e) {
+            logger.error(e.toString());
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+    }
+
     @GetMapping("logs")
     public ResponseEntity<BaseResultDTO> getTeamLogs(
             @ModelAttribute("authInfo") AuthInfo authInfo,

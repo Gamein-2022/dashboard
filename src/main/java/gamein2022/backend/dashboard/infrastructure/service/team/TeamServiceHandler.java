@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceHandler {
@@ -87,6 +88,15 @@ public class TeamServiceHandler {
 
     }
 
+    public TeamInfoResultDTO getTeamInfo(Long teamId, Long userId) throws BadRequestException {
+        Optional<Team> teamOptional = teamRepository.findById(teamId);
+        if (teamOptional.isEmpty()) throw new BadRequestException("team not found");
+        Team team = teamOptional.get();
+        return new TeamInfoResultDTO(team.getName(),
+                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                userId.equals(team.getOwner().getId()));
+    }
+
     public TeamInfoResultDTO createTeam(Long userId, String teamName) throws UserNotFoundException, BadRequestException {
         if (teamName == null || teamName.isEmpty()) {
             throw new BadRequestException();
@@ -114,7 +124,9 @@ public class TeamServiceHandler {
 
         userRepository.save(user);
 
-        return new TeamInfoResultDTO(team.getName());
+        return new TeamInfoResultDTO(team.getName(),
+                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
+                true);
     }
 
     public GetTeamLogsResultDTO getTeamLogs(AuthInfo authInfo, LogType logType) {
