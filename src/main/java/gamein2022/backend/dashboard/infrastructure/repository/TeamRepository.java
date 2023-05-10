@@ -9,11 +9,11 @@ import java.util.Optional;
 
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
-    @Query("SELECT COUNT  (*) FROM Team ")
+    @Query("SELECT COUNT (*) FROM Team ")
     Integer getCount();
 
-    @Modifying
-    @Query(value = "update teams set region = 0",nativeQuery = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "UPDATE teams SET region = 0", nativeQuery = true)
     void resetTeamsRegion();
 
     Optional<Team> findTeamByName(String name);
