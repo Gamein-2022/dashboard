@@ -148,7 +148,7 @@ public class TeamServiceHandler {
         Team team = teamRepository.findById(teamId).get();
         List<StorageProduct> teamsProduct = storageProductRepository.findAllByTeamId(teamId);
         for (StorageProduct storageProduct : teamsProduct) {
-            wealth += storageProduct.getProduct().getPrice() * storageProduct.getInStorageAmount();
+            wealth += storageProduct.getProduct().getMinPrice() * storageProduct.getInStorageAmount();
         }
         List<Building> teamBuildings = buildingRepository.findAllByTeamId(teamId);
         for (Building building : teamBuildings) {
