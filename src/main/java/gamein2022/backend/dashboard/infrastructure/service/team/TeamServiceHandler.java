@@ -209,13 +209,15 @@ public class TeamServiceHandler {
         List<Team> teams = teamRepository.findAll();
         List<WealthDto> wealths = new ArrayList<>();
         for (Team team : teams) {
-            WealthDto wealthDto = new WealthDto();
-            wealthDto.setTeamId(team.getId());
-            wealthDto.setBrand(10L);
-            //TODO fix mock brand
-            wealthDto.setWealth(getTeamWealth(team.getId()));
-            wealthDto.setTeamName(team.getName());
-            wealths.add(wealthDto);
+            if (team.getId() != 0){
+                WealthDto wealthDto = new WealthDto();
+                wealthDto.setTeamId(team.getId());
+                wealthDto.setBrand(10L);
+                //TODO fix mock brand
+                wealthDto.setWealth(getTeamWealth(team.getId()));
+                wealthDto.setTeamName(team.getName());
+                wealths.add(wealthDto);
+            }
         }
         wealths.sort(Comparator.comparing(WealthDto::getWealth).reversed());
         teamsWealth = wealths;
