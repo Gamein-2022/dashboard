@@ -31,6 +31,9 @@ public class News {
     @Column(name = "image_address")
     private String image;
 
+    @Column(name = "date", nullable = false)
+    private String date;
+
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private NewsType type;

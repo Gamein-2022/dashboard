@@ -10,4 +10,5 @@ public class AddNewsRequest {
     private String description;
     private String image;
     private NewsType type;
+    private String date;
 }

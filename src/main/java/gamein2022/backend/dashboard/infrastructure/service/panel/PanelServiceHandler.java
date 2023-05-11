@@ -8,11 +8,7 @@ import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.core.sharedkernel.enums.NewsType;
-import gamein2022.backend.dashboard.infrastructure.repository.RegionRepository;
-import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
-import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
-import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
-import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
+import gamein2022.backend.dashboard.infrastructure.repository.*;
 import gamein2022.backend.dashboard.infrastructure.service.team.TeamServiceHandler;
 import gamein2022.backend.dashboard.web.dto.result.GetTop100Result;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,19 +27,16 @@ public class PanelServiceHandler implements PanelService {
 
     private final TeamRepository teamRepository;
     private final TimeRepository timeRepository;
-
-    private final RegionRepository regionRepository;
-
     private final UserRepository userRepository;
-
     private final TeamServiceHandler teamService;
+    private final NewsRepository newsRepository;
 
-    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository,RegionRepository regionRepository, UserRepository userRepository, TeamServiceHandler teamService) {
+    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, UserRepository userRepository, TeamServiceHandler teamService, NewsRepository newsRepository) {
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
-        this.regionRepository = regionRepository;
         this.userRepository = userRepository;
         this.teamService = teamService;
+        this.newsRepository = newsRepository;
     }
 
     @Override
@@ -119,12 +112,14 @@ public class PanelServiceHandler implements PanelService {
     }
 
     @Override
-    public void addNews(String title, String desc, String image, NewsType type) {
+    public void addNews(String title, String desc, String image, NewsType type, String date) {
         News news = new News();
         news.setTitle(title);
         news.setDesc(desc);
         news.setImage(image);
         news.setType(type);
+        news.setDate(date);
+        newsRepository.save(news);
     }
 
     private User login(String email, String phone, String password)

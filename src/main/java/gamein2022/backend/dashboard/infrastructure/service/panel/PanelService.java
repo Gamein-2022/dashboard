@@ -24,5 +24,5 @@ public interface PanelService {
 
     void addTeam(String username, String password, String teamName) throws UserNotFoundException, BadRequestException, InvalidTokenException;
 
-    void addNews(String title, String desc, String image, NewsType type);
+    void addNews(String title, String desc, String image, NewsType type, String date);
 }

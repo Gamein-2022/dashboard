@@ -68,10 +68,9 @@ public class ProfileServiceHandler implements ProfileService {
     }
 
     @Override
-    public NewsNotifsDTO getNews() {
+    public NewsNotifsDTO getNews(NewsType type) {
         return new NewsNotifsDTO(
-                newsRepository.findAllByType(NewsType.NEWS).stream().map(News::toDTO).collect(Collectors.toList()),
-                newsRepository.findAllByType(NewsType.NEWS).stream().map(News::toDTO).collect(Collectors.toList())
+                newsRepository.findAllByType(type).stream().map(News::toDTO).collect(Collectors.toList())
         );
     }
 }

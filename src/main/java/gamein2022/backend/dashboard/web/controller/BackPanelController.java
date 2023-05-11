@@ -135,6 +135,8 @@ public class BackPanelController {
     public ResponseEntity<BaseResultDTO> addNews(
             @RequestBody AddNewsRequest request
     ) {
-        return null;
+        panelService.addNews(request.getTitle(), request.getDescription(), request.getImage(),
+                request.getType(), request.getDate());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
