@@ -39,6 +39,6 @@ public class News {
     private NewsType type;
 
     public NewsDTO toDTO() {
-        return new NewsDTO(title, desc, image);
+        return new NewsDTO(title, desc, image, date);
     }
 }
