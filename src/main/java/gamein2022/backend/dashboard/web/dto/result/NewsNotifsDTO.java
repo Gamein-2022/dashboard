@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ListNewsDTO implements BaseResultDTO {
+public class NewsNotifsDTO implements BaseResultDTO {
     private List<NewsDTO> news;
+    private List<NewsDTO> notifs;
 }

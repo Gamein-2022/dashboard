@@ -8,7 +8,7 @@ import gamein2022.backend.dashboard.core.sharedkernel.enums.NewsType;
 import gamein2022.backend.dashboard.infrastructure.repository.NewsRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.web.dto.request.ProfileInfoRequestDTO;
-import gamein2022.backend.dashboard.web.dto.result.ListNewsDTO;
+import gamein2022.backend.dashboard.web.dto.result.NewsNotifsDTO;
 import gamein2022.backend.dashboard.web.dto.result.ProfileInfoResultDTO;
 import org.springframework.stereotype.Service;
 
@@ -68,16 +68,10 @@ public class ProfileServiceHandler implements ProfileService {
     }
 
     @Override
-    public ListNewsDTO getNews() {
-        return new ListNewsDTO(
+    public NewsNotifsDTO getNews() {
+        return new NewsNotifsDTO(
+                newsRepository.findAllByType(NewsType.NEWS).stream().map(News::toDTO).collect(Collectors.toList()),
                 newsRepository.findAllByType(NewsType.NEWS).stream().map(News::toDTO).collect(Collectors.toList())
-        );
-    }
-
-    @Override
-    public ListNewsDTO getNotifs() {
-        return new ListNewsDTO(
-                newsRepository.findAllByType(NewsType.NOTIFICATION).stream().map(News::toDTO).collect(Collectors.toList())
         );
     }
 }

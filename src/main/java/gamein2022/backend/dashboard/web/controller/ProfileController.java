@@ -62,11 +62,4 @@ public class ProfileController {
                 profileService.getNews(), HttpStatus.OK
         );
     }
-
-    @GetMapping(value = "news", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> getNotifs() {
-        return new ResponseEntity<>(
-                profileService.getNotifs(), HttpStatus.OK
-        );
-    }
 }
