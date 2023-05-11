@@ -1,9 +1,6 @@
 package gamein2022.backend.dashboard.web.controller;
 
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
-import gamein2022.backend.dashboard.core.exception.UnauthorizedException;
-import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
-import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
 import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.servlet.http.HttpServletRequest;
 
 
-@ControllerAdvice(assignableTypes = {ProfileController.class,TeamController.class,TeamBuildingController.class})
+@ControllerAdvice(assignableTypes = {ProfileController.class,TeamController.class})
 public class InitController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
