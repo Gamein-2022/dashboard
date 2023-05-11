@@ -3,9 +3,11 @@ package gamein2022.backend.dashboard.infrastructure.service.panel;
 import gamein2022.backend.dashboard.core.exception.BadRequestException;
 import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
+import gamein2022.backend.dashboard.core.sharedkernel.entity.News;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Team;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.Time;
 import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
+import gamein2022.backend.dashboard.core.sharedkernel.enums.NewsType;
 import gamein2022.backend.dashboard.infrastructure.repository.RegionRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
@@ -114,6 +116,15 @@ public class PanelServiceHandler implements PanelService {
             user.setTeam(team);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void addNews(String title, String desc, String image, NewsType type) {
+        News news = new News();
+        news.setTitle(title);
+        news.setDesc(desc);
+        news.setImage(image);
+        news.setType(type);
     }
 
     private User login(String email, String phone, String password)

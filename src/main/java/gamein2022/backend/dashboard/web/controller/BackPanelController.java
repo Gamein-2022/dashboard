@@ -7,6 +7,7 @@ import gamein2022.backend.dashboard.core.exception.InvalidTokenException;
 import gamein2022.backend.dashboard.core.exception.UserNotFoundException;
 import gamein2022.backend.dashboard.infrastructure.service.panel.PanelService;
 import gamein2022.backend.dashboard.web.dto.request.AddAllTeamBalanceRequestDTO;
+import gamein2022.backend.dashboard.web.dto.request.AddNewsRequest;
 import gamein2022.backend.dashboard.web.dto.request.AddTeamRequest;
 import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.CheckAdminResult;
@@ -130,4 +131,10 @@ public class BackPanelController {
         }
     }
 
+    @PostMapping("news")
+    public ResponseEntity<BaseResultDTO> addNews(
+            @RequestBody AddNewsRequest request
+    ) {
+        return null;
+    }
 }

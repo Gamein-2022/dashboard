@@ -28,10 +28,10 @@ public class News {
     @Column(name = "description", nullable = false, length = 1048576)
     private String desc;
 
-    @Column(name = "image_address", nullable = false)
+    @Column(name = "image_address")
     private String image;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private NewsType type;
 

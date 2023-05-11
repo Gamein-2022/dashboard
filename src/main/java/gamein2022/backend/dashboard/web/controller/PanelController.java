@@ -46,4 +46,11 @@ public class PanelController {
         ErrorResultDTO result = new ErrorResultDTO(exception.getMessage(), HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(result, result.getStatus());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResultDTO> exception(UnauthorizedException exception){
+        logger.error("Error: " + exception.getMessage());
+        ErrorResultDTO result = new ErrorResultDTO(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(result, result.getStatus());
+    }
 }
