@@ -57,20 +57,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = "/register",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> register(@RequestBody RegisterAndLoginRequestDTO request) {
-        try {
-            RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail(), request.getPassword());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (BadRequestException | UserAlreadyExist e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
-        }
-    }
-
     @GetMapping(value = "/info",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
