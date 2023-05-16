@@ -42,38 +42,6 @@ public class TeamController {
         }
     }
 
-    /*@PostMapping("region")
-    public ResponseEntity<BaseResultDTO> setTeamRegion(
-            @ModelAttribute("authInfo") AuthInfo authInfo,
-            @RequestBody SetTeamRegionRequestDTO setTeamRegionRequestDTO
-    ) {
-        try {
-            RegionResultDTO regionResultDTO = teamServiceHandler.setTeamRegion(authInfo.getTeamId(), setTeamRegionRequestDTO.getRegionId());
-            return new ResponseEntity<>(regionResultDTO, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            logger.error(e.getMessage(), e);
-            return new ResponseEntity<>(new ErrorResultDTO("Team Not Found", HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
-    }*/
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> createTeam(@ModelAttribute("authInfo") AuthInfo authInfo,
-                                                    @RequestBody TeamInfoRequestDTO request) {
-        try {
-            TeamInfoResultDTO result = teamServiceHandler.createTeam(authInfo.getUserId(), request.getName());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(error, error.getStatus());
-        } catch (BadRequestException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
-        }
-    }
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> getTeamInfo(@ModelAttribute("authInfo") AuthInfo authInfo) {
         try {

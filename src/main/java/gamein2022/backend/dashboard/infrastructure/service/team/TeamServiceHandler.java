@@ -32,8 +32,6 @@ public class TeamServiceHandler {
 
     private final StorageProductRepository storageProductRepository;
 
-    private final RegionRepository regionRepository;
-
     private final BuildingInfoRepository buildingInfoRepository;
 
     private final TeamResearchRepository teamResearchRepository;
@@ -42,14 +40,13 @@ public class TeamServiceHandler {
     private String liveUrl;
 
 
-    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, RegionRepository regionRepository, BuildingInfoRepository buildingInfoRepository, TeamResearchRepository teamResearchRepository) {
+    public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, BuildingInfoRepository buildingInfoRepository, TeamResearchRepository teamResearchRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
         this.logRepository = logRepository;
         this.buildingRepository = buildingRepository;
         this.storageProductRepository = storageProductRepository;
-        this.regionRepository = regionRepository;
         this.buildingInfoRepository = buildingInfoRepository;
         this.teamResearchRepository = teamResearchRepository;
     }

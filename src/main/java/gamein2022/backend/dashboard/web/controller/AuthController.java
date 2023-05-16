@@ -23,7 +23,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -37,7 +37,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping(value = "/login",
+    @PostMapping(value = "login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> login(@RequestBody RegisterAndLoginRequestDTO request) {
@@ -57,7 +57,22 @@ public class AuthController {
         }
     }
 
-    @GetMapping(value = "/info",
+    @PostMapping(value = "register",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BaseResultDTO> register(@RequestBody RegisterAndLoginRequestDTO request) {
+        try {
+            RegisterAndLoginResultDTO result = authService.register(request.getPhone(), request.getEmail().toLowerCase(),
+                    request.getPassword());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (BadRequestException | UserAlreadyExist e) {
+            logger.error(e.toString());
+            ErrorResultDTO error = new ErrorResultDTO(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "info",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
@@ -83,6 +98,7 @@ public class AuthController {
             return new ResponseEntity<>(error, error.getStatus());
         }
     }
+
     @GetMapping("time")
     public ResponseEntity<BaseResultDTO> getTime() {
         return new ResponseEntity<>(authService.getTime(), HttpStatus.OK);
