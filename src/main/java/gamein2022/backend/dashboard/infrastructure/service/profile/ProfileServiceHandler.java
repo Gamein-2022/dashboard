@@ -18,13 +18,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProfileServiceHandler implements ProfileService {
-    private final UserRepository userRepository;
     private final NewsRepository newsRepository;
 
 
 
-    public ProfileServiceHandler(UserRepository userRepository, NewsRepository newsRepository) {
-        this.userRepository = userRepository;
+    public ProfileServiceHandler(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
     }
 
