@@ -29,45 +29,6 @@ public class ProfileServiceHandler implements ProfileService {
     }
 
     @Override
-    public ProfileInfoResultDTO getProfileInfo(Long id) throws UserNotFoundException {
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        User user = userOptional.get();
-
-        return new ProfileInfoResultDTO(user.getEnglishName(), user.getPersianName());
-    }
-
-    @Override
-    public ProfileInfoResultDTO setProfileInfo(Long id, ProfileInfoRequestDTO info) throws UserNotFoundException, BadRequestException {
-        if (info.getEnglishName() == null && info.getPersianName() == null) {
-            throw new BadRequestException();
-        }
-
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        User user = userOptional.get();
-
-        if (info.getEnglishName() != null) {
-            user.setEnglishName(info.getEnglishName());
-        }
-        if (info.getPersianName() != null) {
-            user.setPersianName(info.getPersianName());
-        }
-
-        userRepository.save(user);
-
-        return new ProfileInfoResultDTO(user.getEnglishName(), user.getPersianName());
-    }
-
-    @Override
     public NewsNotifsDTO getNews(NewsType type) {
         return new NewsNotifsDTO(
                 newsRepository.findAllByType(type).stream().map(News::toDTO).collect(Collectors.toList())

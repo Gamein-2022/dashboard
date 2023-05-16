@@ -28,37 +28,6 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping(value = "/info",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> getInfo(@ModelAttribute("authInfo") AuthInfo authInfo) {
-        try {
-            ProfileInfoResultDTO result = profileService.getProfileInfo(authInfo.getUserId());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(error, error.getStatus());
-        }
-    }
-    @PutMapping(value = "/info",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResultDTO> setInfo(@ModelAttribute("authInfo") AuthInfo authInfo,
-                                                        @RequestBody ProfileInfoRequestDTO request) {
-        try {
-            ProfileInfoResultDTO result = profileService.setProfileInfo(authInfo.getUserId(), request);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(error, error.getStatus());
-        } catch (BadRequestException e) {
-            logger.error(e.toString());
-            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(error, error.getStatus());
-        }
-    }
-
     @GetMapping(value = "news", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> getNews(
             @RequestParam("type") NewsType type

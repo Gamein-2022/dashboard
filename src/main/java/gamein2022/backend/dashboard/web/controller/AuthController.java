@@ -23,7 +23,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -37,7 +37,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping(value = "/login",
+    @PostMapping(value = "login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> login(@RequestBody RegisterAndLoginRequestDTO request) {
@@ -72,7 +72,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping(value = "/info",
+    @GetMapping(value = "info",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResultDTO> info(HttpServletRequest request) {
         try {
@@ -98,6 +98,7 @@ public class AuthController {
             return new ResponseEntity<>(error, error.getStatus());
         }
     }
+
     @GetMapping("time")
     public ResponseEntity<BaseResultDTO> getTime() {
         return new ResponseEntity<>(authService.getTime(), HttpStatus.OK);
