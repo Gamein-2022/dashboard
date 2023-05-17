@@ -113,7 +113,7 @@ public class TeamServiceHandler {
 
         }
         List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeAfter(teamId,
-                LocalDateTime.now(ZoneOffset.UTC));
+                java.sql.Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
         for (TeamResearch teamResearch : teamResearches) {
             wealth += teamResearch.getPaidAmount();
         }

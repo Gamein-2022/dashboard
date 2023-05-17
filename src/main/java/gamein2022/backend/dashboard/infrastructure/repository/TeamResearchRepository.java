@@ -8,5 +8,5 @@ import java.util.Date;
 import java.util.List;
 
 public interface TeamResearchRepository extends JpaRepository<TeamResearch,Long> {
-    List<TeamResearch> findAllByTeamIdAndAndEndTimeAfter(Long teamId, LocalDateTime endTime);
+    List<TeamResearch> findAllByTeamIdAndAndEndTimeAfter(Long teamId, Date endTime);
 }
