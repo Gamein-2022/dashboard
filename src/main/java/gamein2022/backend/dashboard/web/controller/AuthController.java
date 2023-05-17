@@ -6,7 +6,9 @@ import gamein2022.backend.dashboard.core.sharedkernel.entity.User;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.infrastructure.service.auth.AuthService;
+import gamein2022.backend.dashboard.web.dto.request.ForgotPasswordRequestDTO;
 import gamein2022.backend.dashboard.web.dto.request.RegisterAndLoginRequestDTO;
+import gamein2022.backend.dashboard.web.dto.request.ResetPasswordRequestDTO;
 import gamein2022.backend.dashboard.web.dto.result.BaseResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.ErrorResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
@@ -68,6 +70,28 @@ public class AuthController {
         } catch (BadRequestException | UserAlreadyExist e) {
             logger.error(e.toString());
             ErrorResultDTO error = new ErrorResultDTO(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("forget-password")
+    public ResponseEntity<BaseResultDTO> forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
+        try {
+            authService.forgotPassword(request.getPhone());
+        } catch (UserNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("reset-password")
+    public ResponseEntity<BaseResultDTO> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        try {
+            authService.resetPassword(request.getCode(), request.getPassword());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            logger.error(e.getMessage(), e);
+            ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }

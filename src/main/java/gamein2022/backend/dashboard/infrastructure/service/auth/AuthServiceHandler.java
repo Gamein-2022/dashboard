@@ -11,11 +11,13 @@ import gamein2022.backend.dashboard.infrastructure.repository.TeamRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.TimeRepository;
 import gamein2022.backend.dashboard.infrastructure.repository.UserRepository;
 import gamein2022.backend.dashboard.infrastructure.util.JwtUtils;
+import gamein2022.backend.dashboard.infrastructure.util.RestUtil;
 import gamein2022.backend.dashboard.infrastructure.util.TimeUtil;
 import gamein2022.backend.dashboard.web.dto.result.RegisterAndLoginResultDTO;
 import gamein2022.backend.dashboard.web.dto.result.TimeResultDTO;
 import gamein2022.backend.dashboard.web.iao.AuthInfo;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,12 @@ public class AuthServiceHandler implements AuthService {
 
     private final UserRepository userRepository;
     private final TimeRepository timeRepository;
+
+    @Value("${kavehnegar.base.url}")
+    private String kavehnegarBaseUrl;
+
+    @Value("${kavehnegar.template}")
+    private String kavehnegarTemplte;
 
 
     public AuthServiceHandler(UserRepository userRepository, TimeRepository timeRepository) {
@@ -97,6 +105,32 @@ public class AuthServiceHandler implements AuthService {
     }
 
     @Override
+    public void forgotPassword(String phone) throws UserNotFoundException {
+        String code = generateAndSaveCode(phone);
+        try {
+            RestUtil.sendSMS(kavehnegarBaseUrl,code,phone,kavehnegarTemplte);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void resetPassword(String code, String password) throws BadRequestException {
+        Optional<User> userOptional = userRepository.findByPasswordCode(code);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException("کد نامعتبر!");
+        }
+        if (password == null || password.length() < 8) {
+            throw new BadRequestException("طول رمز عبور باید ۸ حرف یا بیشتر باشد!");
+        }
+
+        User user = userOptional.get();
+        user.setPassword((new BCryptPasswordEncoder()).encode(password));
+        user.setPasswordCode(null);
+        userRepository.save(user);
+    }
+
+    @Override
     public AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException {
         if (JwtUtils.isTokenExpired(token)) {
             throw new InvalidTokenException("توکن ارسالی معتبر نمی‌باشد");
@@ -139,5 +173,37 @@ public class AuthServiceHandler implements AuthService {
             throw new BadRequestException("User does not exist!");
         }
         return userOptional.get();
+    }
+
+    private String generateAndSaveCode(String contact) throws UserNotFoundException {
+        Optional<User> userOptional = userRepository.findByEmailOrPhone(contact, contact);
+        if (userOptional.isEmpty()) throw new UserNotFoundException();
+        User user = userOptional.get();
+        String code = randomCodeGenerator();
+        user.setPasswordCode(code);
+        return userRepository.save(user).getPasswordCode();
+    }
+
+    private String randomCodeGenerator() {
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(6);
+
+        for (int i = 0; i < 6; i++) {
+
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index
+                    = (int) (AlphaNumericString.length()
+                    * Math.random());
+
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString
+                    .charAt(index));
+        }
+        return sb.toString();
     }
 }

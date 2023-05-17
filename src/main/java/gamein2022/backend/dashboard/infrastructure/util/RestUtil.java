@@ -8,6 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RestUtil {
+    public static void sendSMS(String baseUrl, String token, String receptor, String template) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = String.format(baseUrl + "?receptor=%s&token=%s&template=%s",receptor,token,template);
+        ResponseEntity<String> response = restTemplate.getForEntity(url,String.class);
+        if (!response.getStatusCode().equals(HttpStatus.OK)){
+            throw new Exception("خطا در ارسال پبامک");
+        }
+    }
+
     public static String sendRawRequest(String url, Map<String, String> params, HttpMethod method, MediaType mediaType) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

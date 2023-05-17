@@ -18,6 +18,8 @@ public interface AuthService {
     AuthInfo extractAuthInfoFromToken(String token) throws InvalidTokenException;
 
     User getUserById(Long userId) throws BadRequestException;
+    void forgotPassword(String email) throws UserNotFoundException;
+    void resetPassword(String code, String password) throws BadRequestException;
 
 
     TimeResultDTO getTime();
