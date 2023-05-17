@@ -29,15 +29,10 @@ public class InitController {
 
     @ModelAttribute(name = "authInfo")
     public AuthInfo getLoginInformation(HttpServletRequest request) throws InvalidTokenException {
-//        Time time = timeRepository.findById(1L).get();
-//        if (time.getIsGamePaused()){
-//            throw new InvalidTokenException("بازی متوقف است .");
-//        }
         String token = request.getHeader("Authorization");
         if (token == null || token.length() < 8) {
             throw new InvalidTokenException("Invalid token!");
         }
-
         return authService.extractAuthInfoFromToken(token.substring(7));
     }
 
