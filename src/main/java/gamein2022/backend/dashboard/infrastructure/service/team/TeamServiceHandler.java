@@ -36,8 +36,6 @@ public class TeamServiceHandler {
 
     private final TeamResearchRepository teamResearchRepository;
 
-    @Value("${live.data.url}")
-    private String liveUrl;
 
 
     public TeamServiceHandler(UserRepository userRepository, TeamRepository teamRepository, TimeRepository timeRepository, LogRepository logRepository, BuildingRepository buildingRepository, StorageProductRepository storageProductRepository, BuildingInfoRepository buildingInfoRepository, TeamResearchRepository teamResearchRepository) {
@@ -53,18 +51,6 @@ public class TeamServiceHandler {
 
     List<WealthDto> teamsWealth = new ArrayList<>();
 
-    public RegionResultDTO setTeamRegion(long teamId, String teamRegion) throws UserNotFoundException {
-        Optional<Team> teamOptional = teamRepository.findById(teamId);
-        if (teamOptional.isEmpty())
-            throw new UserNotFoundException();
-        Team team = teamOptional.get();
-        RegionResultDTO regionResultDTO = new RegionResultDTO();
-        regionResultDTO.setLastRegionId(team.getRegion());
-        team.setRegion(Integer.parseInt(teamRegion));
-        regionResultDTO.setTeamRegionId(team.getRegion());
-        teamRepository.save(team);
-        return regionResultDTO;
-    }
 
     public RegionResultDTO getTeamRegion(long teamId) throws UserNotFoundException {
         Optional<Team> teamOptional = teamRepository.findById(teamId);
@@ -94,37 +80,6 @@ public class TeamServiceHandler {
                 userId.equals(team.getOwner().getId()));
     }
 
-    public TeamInfoResultDTO createTeam(Long userId, String teamName) throws UserNotFoundException, BadRequestException {
-        if (teamName == null || teamName.isEmpty()) {
-            throw new BadRequestException();
-        }
-
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        User user = userOptional.get();
-
-        Team team = new Team();
-
-        team.setName(teamName);
-        team.setUsers(new ArrayList<>());
-        team.getUsers().add(user);
-        team.setOwner(user);
-        team.setBalance(212_000_000);
-
-        teamRepository.save(team);
-
-        user.setTeam(team);
-
-        userRepository.save(user);
-
-        return new TeamInfoResultDTO(team.getName(),
-                team.getUsers().stream().map(User::toDTO).collect(Collectors.toList()),
-                true);
-    }
 
     public GetTeamLogsResultDTO getTeamLogs(AuthInfo authInfo, LogType logType) {
         List<LogDTO> logs;
@@ -221,41 +176,4 @@ public class TeamServiceHandler {
         teamsWealth = wealths;
     }
 
-//    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
-//    public void payRegionPrice() {
-//        Time time = timeRepository.findById(1L).get();
-//        Long duration =  Duration.between(time.getBeginTime(),LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
-//        boolean isChooseRegionFinished = duration - time.getStoppedTimeSeconds() > time.getChooseRegionDuration();
-//        if (! time.getIsRegionPayed() && isChooseRegionFinished){
-//            List<Region> regions = regionRepository.findAll();
-//            List<Team> teams = teamRepository.findAll();
-//            for (Team team : teams){
-//                if (team.getRegion() == 0){
-//                    Random random = new Random();
-//                    team.setRegion(random.nextInt(8) + 1);
-//                    Region region = regions.get(team.getRegion() - 1);
-//                    region.setRegionPopulation(region.getRegionPopulation() + 1);
-//                }
-//            }
-//            for (Region region: regions){
-//                region.setRegionPayed(calculateRegionPrice(region.getRegionPopulation()));
-//            }
-//            for (Team team : teams){
-//                team.setBalance(team.getBalance() - regions.get(team.getRegion() - 1).getRegionPayed());
-//            }
-//            regionRepository.saveAll(regions);
-//            teamRepository.saveAll(teams);
-//            time.setIsRegionPayed(true);
-//            timeRepository.save(time);
-//            String text = "هزینه زمین از حساب شما برداشت شد.";
-//            RestUtil.sendNotificationToAll(text,"UPDATE_BALANCE",liveUrl);
-//        }
-//    }
-
-    private Long calculateRegionPrice(Long currentPopulation) {
-        Time time = timeRepository.findById(1L).get();
-        Long scale = time.getScale();
-        Integer teamsCount = teamRepository.getCount();
-        return (long) ((1 + (2.25 / (0.8 + 9 * Math.exp(-0.8 * (16 * currentPopulation / (teamsCount - 0.26)))))) * scale);
-    }
 }
