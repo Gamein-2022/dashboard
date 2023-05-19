@@ -83,7 +83,7 @@ public class TeamController {
 //        }
 //    }
 
-    @GetMapping("rank")
+    /*@GetMapping("rank")
     public ResponseEntity<BaseResultDTO> getTeamRank (
         @ModelAttribute("authInfo") AuthInfo authInfo
     ){
@@ -94,6 +94,6 @@ public class TeamController {
             ErrorResultDTO error = new ErrorResultDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             return new ResponseEntity<>(error, error.getStatus());
         }
-    }
+    }*/
 
 }
