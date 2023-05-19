@@ -50,4 +50,10 @@ public class Team {
 
     @OneToMany
     private List<TeamResearch> researches;
+
+    @Column(name = "is_storage_upgraded",columnDefinition = "boolean default false")
+    private Boolean isStorageUpgraded;
+
+    @Column(name = "is_region_upgraded", columnDefinition = "boolean default false")
+    private Boolean isRegionUpgraded = false;
 }

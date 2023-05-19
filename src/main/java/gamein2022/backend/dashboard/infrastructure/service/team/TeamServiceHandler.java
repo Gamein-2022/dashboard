@@ -112,6 +112,10 @@ public class TeamServiceHandler {
             }
 
         }
+
+        wealth += team.getIsStorageUpgraded() ? 645_000_000 : 0;
+        wealth += team.getIsRegionUpgraded() ? 170_000_000 : 0;
+
         List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeBefore(teamId,
                 java.sql.Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
         for (TeamResearch teamResearch : teamResearches) {
