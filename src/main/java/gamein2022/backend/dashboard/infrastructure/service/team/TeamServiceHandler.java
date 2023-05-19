@@ -112,7 +112,7 @@ public class TeamServiceHandler {
             }
 
         }
-        List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeAfter(teamId,
+        List<TeamResearch> teamResearches = teamResearchRepository.findAllByTeamIdAndAndEndTimeBefore(teamId,
                 java.sql.Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
         for (TeamResearch teamResearch : teamResearches) {
             wealth += teamResearch.getPaidAmount();
