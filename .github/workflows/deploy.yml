@@ -25,7 +25,7 @@ jobs:
 
   build-dashboard:
     #needs: check-code
-    runs-on: [app-3]
+    runs-on: [app]
     steps:
       - uses: actions/checkout@master
       - run: |
