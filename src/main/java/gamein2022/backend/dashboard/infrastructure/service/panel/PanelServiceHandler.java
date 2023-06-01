@@ -30,13 +30,15 @@ public class PanelServiceHandler implements PanelService {
     private final UserRepository userRepository;
     private final TeamServiceHandler teamService;
     private final NewsRepository newsRepository;
+    private final TeamResearchRepository teamResearchRepository;
 
-    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, UserRepository userRepository, TeamServiceHandler teamService, NewsRepository newsRepository) {
+    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, UserRepository userRepository, TeamServiceHandler teamService, NewsRepository newsRepository, TeamResearchRepository teamResearchRepository) {
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
         this.userRepository = userRepository;
         this.teamService = teamService;
         this.newsRepository = newsRepository;
+        this.teamResearchRepository = teamResearchRepository;
     }
 
     @Override
@@ -77,6 +79,8 @@ public class PanelServiceHandler implements PanelService {
         time.setStoppedTimeSeconds(time.getStoppedTimeSeconds() + duration);
         time.setIsGamePaused(false);
         timeRepository.save(time);
+        teamResearchRepository.updateRAndDEndTime(duration);
+        teamResearchRepository.updateRAndDBeginTime(duration);
     }
 
     @Override
