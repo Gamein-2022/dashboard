@@ -25,7 +25,7 @@ jobs:
 
   build-dashboard:
     #needs: check-code
-    runs-on: [app-3]
+    runs-on: [app]
     steps:
       - uses: actions/checkout@master
       - run: |
@@ -48,15 +48,15 @@ jobs:
               docker compose ps
               
               
-  deploy-dashboard-1:
-    needs: build-dashboard
-    runs-on: [app-1]
-    steps:
-      - uses: actions/checkout@master
-      - run: | 
-              docker login   -u daria -p 7HlUyiSD  https://registry.dariasystem.com
-              docker pull registry.dariasystem.com/gamein/dashboard:dev
-              docker rm -f dashboard-1
-              docker compose up  -d dashboard-1
-              sleep 10
-              docker compose ps
+#   deploy-dashboard-1:
+#     needs: build-dashboard
+#     runs-on: [app-1]
+#     steps:
+#       - uses: actions/checkout@master
+#       - run: | 
+#               docker login   -u daria -p 7HlUyiSD  https://registry.dariasystem.com
+#               docker pull registry.dariasystem.com/gamein/dashboard:dev
+#               docker rm -f dashboard-1
+#               docker compose up  -d dashboard-1
+#               sleep 10
+#               docker compose ps

@@ -25,4 +25,6 @@ public interface TeamResearchRepository extends JpaRepository<TeamResearch,Long>
     @Query(value = "UPDATE team_researches SET begin_time = begin_time + make_interval(0, 0, 0, 0, 0, 0, :duration)",
             nativeQuery = true)
     void updateRAndDBeginTime(Long duration);
+
+    List<TeamResearch> findAllByTeamIdAndAndEndTimeBefore(Long teamId, Date endTime);
 }
