@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ShippingRepository extends CrudRepository<Shipping,Long> {
     @Modifying
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    @Query(value = "UPDATE shipping SET departureTime = departureTime + make_interval(0, 0, 0, 0, 0, 0, :duration)",
+    @Query(value = "UPDATE shipping SET departure_time = departure_time + make_interval(0, 0, 0, 0, 0, 0, :duration)",
             nativeQuery = true)
     void updateShippingEndTime(Long duration);
 
     @Modifying
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    @Query(value = "UPDATE shipping SET arrivalTime = arrivalTime + make_interval(0, 0, 0, 0, 0, 0, :duration)",
+    @Query(value = "UPDATE shipping SET arrival_time = arrival_time + make_interval(0, 0, 0, 0, 0, 0, :duration)",
             nativeQuery = true)
     void updateShippingBeginTime(Long duration);
 }
