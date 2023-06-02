@@ -70,6 +70,8 @@ public class PanelServiceHandler implements PanelService {
     @Override
     public void pauseGame() {
         Time time = timeRepository.findById(1L).get();
+        if (time.getIsGamePaused())
+            return;
         time.setLastStopTime(LocalDateTime.now(ZoneOffset.UTC));
         time.setIsGamePaused(true);
         timeRepository.save(time);
@@ -78,6 +80,8 @@ public class PanelServiceHandler implements PanelService {
     @Override
     public void resumeGame() {
         Time time = timeRepository.findById(1L).get();
+        if (!time.getIsGamePaused())
+            return;
         Long duration = Duration.between(time.getLastStopTime(), LocalDateTime.now(ZoneOffset.UTC)).toSeconds();
         time.setLastStopTime(null);
         time.setStoppedTimeSeconds(time.getStoppedTimeSeconds() + duration);
