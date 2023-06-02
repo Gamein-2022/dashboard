@@ -32,13 +32,17 @@ public class PanelServiceHandler implements PanelService {
     private final NewsRepository newsRepository;
     private final TeamResearchRepository teamResearchRepository;
 
-    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, UserRepository userRepository, TeamServiceHandler teamService, NewsRepository newsRepository, TeamResearchRepository teamResearchRepository) {
+    private final ShippingRepository shippingRepository;
+
+
+    public PanelServiceHandler(TeamRepository teamRepository, TimeRepository timeRepository, UserRepository userRepository, TeamServiceHandler teamService, NewsRepository newsRepository, TeamResearchRepository teamResearchRepository, ShippingRepository shippingRepository) {
         this.teamRepository = teamRepository;
         this.timeRepository = timeRepository;
         this.userRepository = userRepository;
         this.teamService = teamService;
         this.newsRepository = newsRepository;
         this.teamResearchRepository = teamResearchRepository;
+        this.shippingRepository = shippingRepository;
     }
 
     @Override
@@ -81,6 +85,8 @@ public class PanelServiceHandler implements PanelService {
         timeRepository.save(time);
         teamResearchRepository.updateRAndDEndTime(duration);
         teamResearchRepository.updateRAndDBeginTime(duration);
+        shippingRepository.updateShippingBeginTime(duration);
+        shippingRepository.updateShippingEndTime(duration);
     }
 
     @Override

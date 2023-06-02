@@ -1,6 +1,8 @@
 package gamein2022.backend.dashboard.core.sharedkernel.entity;
 
 import gamein2022.backend.dashboard.core.sharedkernel.enums.ShippingMethod;
+import gamein2022.backend.dashboard.core.sharedkernel.enums.ShippingStatus;
+import gamein2022.backend.dashboard.web.dto.result.ShippingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,9 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 
@@ -30,11 +35,21 @@ public class Shipping {
     private Integer sourceRegion;
 
     @Column(name = "departure_time", nullable = false)
-    private Date departureTime;
+    private LocalDateTime departureTime;
 
     @Column(name = "arrival_time", nullable = false)
-    private Date arrivalTime;
+    private LocalDateTime arrivalTime;
+
+    @Column(name = "status")
+    private ShippingStatus status;
 
     @ManyToOne(optional = false)
     private Team team;
+
+    @ManyToOne(optional = false,cascade = CascadeType.ALL)
+    private Product product;
+
+    @Column(name = "amount", nullable = false)
+    private int amount;
+
 }
